@@ -29,9 +29,9 @@ export const constantRouterMap = [
       path: 'home',
       name: 'home',
       component: () => import('@/views/home/index'),
-      meta: {title: '首页', icon: 'home'}
+      meta: {title: '首页11', icon: 'home'}
     }]
-  }
+  },
 ]
 
 export const asyncRouterMap = [
@@ -40,7 +40,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/pms/product',
     name: 'pms',
-    meta: {title: '商品', icon: 'product'},
+    meta: {title: '商品22', icon: 'product'},
     children: [{
       path: 'product',
       name: 'product',
@@ -356,6 +356,135 @@ export const asyncRouterMap = [
         meta: {title: '资源分类'},
         hidden: true
       }
+    ]
+  },
+  
+  {
+    path:'/shopManagement',
+    component: Layout,
+    redirect: '/shopManagement/shop',
+    name: 'shopManagement',
+    meta: {title: '猫超商品管理', icon: 'product'},
+    children: [
+      {
+        path: 'shop',
+        name: 'shop',
+        component: () => import('@/views/shopManagement/index'),
+        meta: {title: '猫超商品管理', icon: 'product'}
+      },
+      {
+        path: 'shop/add',
+        name: 'shop/add',
+        component: () => import('@/views/shopManagement/add'),
+        meta: {title: '修改商品', icon: 'product-add'},
+        hidden: true
+      },
+    ]
+  },
+  {
+    path:'/saleOrder',
+    component: Layout,
+    redirect: '/saleOrder/order',
+    name: 'saleOrder',
+    meta: {title: '抢购订单', icon: 'ums'},
+    children: [
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/saleOrder/index'),
+        meta: {title: '抢购订单', icon: 'ums-admin'}
+      },
+    ]
+  },
+  
+  {
+    path:'/orderManagement',
+    component: Layout,
+    redirect: '/orderManagement/management',
+    name: 'orderManagement',
+    meta: {title: '猫超订单管理', icon: 'ums'},
+    children: [
+      {
+        path: 'orderManagement',
+        name: 'orderManagement',
+        component: () => import('@/views/orderManagement/index'),
+        meta: {title: '猫超订单管理', icon: 'ums-admin'}
+      },
+    ]
+  },
+  {
+    path:'/banner',
+    component: Layout,
+    redirect: '/banner/picture',
+    name: 'banner',
+    meta: {title: '首页轮播图管理', icon: 'ums'},
+    children: [
+      {
+        path: 'picture',
+        name: 'picture',
+        component: () => import('@/views/banner/index'),
+        meta: {title: '首页轮播图管理', icon: 'ums-admin'}
+      },
+    ]
+  },
+  {
+    path:'/member',
+    component: Layout,
+    redirect: '/member/user',
+    name: 'member',
+    meta: {title: '会员列表', icon: 'ums'},
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/member/index'),
+        meta: {title: '会员列表', icon: 'ums-admin'}
+      },
+    ]
+  },
+  {
+    path:'/recharge',
+    component: Layout,
+    redirect: '/recharge/catBean',
+    name: 'recharge',
+    meta: {title: '猫豆充值', icon: 'ums'},
+    children: [
+      {
+        path: 'catBean',
+        name: 'catBean',
+        component: () => import('@/views/recharge/index'),
+        meta: {title: '猫豆充值', icon: 'ums-admin'}
+      },
+    ]
+  },
+  {
+    path:'/withdraw',
+    component: Layout,
+    redirect: '/withdraw/withdrawCatBean',
+    name: 'withdraw',
+    meta: {title: '猫豆提现审核', icon: 'ums'},
+    children: [
+      {
+        path: 'withdrawCatBean',
+        name: 'withdrawCatBean',
+        component: () => import('@/views/withdraw/index'),
+        meta: {title: '猫豆提现审核', icon: 'ums-admin'}
+      },
+    ]
+  },
+  {
+    path:'/version',
+    component: Layout,
+    redirect: '/version/management',
+    name: 'version',
+    meta: {title: 'APP版本号管理', icon: 'ums'},
+    children: [
+      {
+        path: 'management',
+        name: 'management',
+        component: () => import('@/views/version/index'),
+        meta: {title: 'APP版本号管理', icon: 'ums-admin'}
+      },
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
