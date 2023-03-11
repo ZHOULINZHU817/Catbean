@@ -28,8 +28,8 @@ export const constantRouterMap = [
     children: [{
       path: 'home',
       name: 'home',
-      component: () => import('@/views/home/index'),
-      meta: {title: '首页11', icon: 'home'}
+      component: () => import('@/views/home/indexNew'),
+      meta: {title: '首页', icon: 'home'}
     }]
   },
 ]
@@ -376,7 +376,7 @@ export const asyncRouterMap = [
         path: 'shop/add',
         name: 'shop/add',
         component: () => import('@/views/shopManagement/add'),
-        meta: {title: '修改商品', icon: 'product-add'},
+        meta: {title: '商品详情', icon: 'product-add'},
         hidden: true
       },
     ]

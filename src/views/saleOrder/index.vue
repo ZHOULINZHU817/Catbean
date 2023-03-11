@@ -165,7 +165,7 @@
     data() {
       return {
         // 主表默认配置
-        viewTableData: [],
+        viewTableData: [{oderCode:'13123131232'}],
         appointmentTabHead: appointmentTabHead, //主表表头
         specialOfferTabHead: specialOfferTabHead,
         resaleTabHead: resaleTabHead,

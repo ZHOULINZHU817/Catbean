@@ -70,7 +70,7 @@
                 <template v-else-if="editfields && item.fieldNo in editfields && (editfields[item.fieldNo].type == 'select' || editfields[item.fieldNo].type == 'radio')">
                     {{renderSelect(scope.row,item.fieldNo)}}
                 </template>
-                <template v-else>{{item.fieldNo | spliceField(scope.row) }}</template>
+                <template v-else>{{scope.row[item.fieldNo] }}</template>
             </template>
         </el-table-column>
 

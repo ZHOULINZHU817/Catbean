@@ -123,6 +123,7 @@
       if(this.isEdit){
         getProduct(this.$route.query.id).then(response=>{
           this.productParam=response.data;
+          console.log('++++++++',  this.productParam)
         });
       }
     },
