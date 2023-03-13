@@ -12,12 +12,15 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import moment from 'moment'
 
 import '@/icons' // icon
 import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
+Vue.use(moment)
+Vue.prototype.$moment = moment
 
 Vue.config.productionTip = false
 
