@@ -487,6 +487,36 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path:'/permission',
+    component: Layout,
+    redirect: '/permission/management',
+    name: 'permission',
+    meta: {title: '权限管理', icon: 'ums-role'},
+    children: [
+      {
+        path: 'permissionManagement',
+        name: 'permissionManagement',
+        component: () => import('@/views/permission/index'),
+        meta: {title: '权限管理', icon: 'ums-role'}
+      },
+    ]
+  },
+  {
+    path:'/callCenter',
+    component: Layout,
+    redirect: '/callCenter/service',
+    name: 'callCenter',
+    meta: {title: '客服管理', icon: 'ums-role'},
+    children: [
+      {
+        path: 'service',
+        name: 'service',
+        component: () => import('@/views/callCenter/index'),
+        meta: {title: '客服管理', icon: 'ums-role'}
+      },
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]
 
