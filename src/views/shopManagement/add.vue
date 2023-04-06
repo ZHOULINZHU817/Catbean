@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" class="form-inner-container" size="small">
+    <el-form :model="form" :rules="rules" ref="productInfoForm" label-width="120px" class="form-inner-container" size="small">
       <!-- <el-form-item label="商品分类：" prop="productCategoryId">
         <el-cascader
           v-model="selectProductCateValue"
@@ -8,32 +8,32 @@
         </el-cascader>
       </el-form-item> -->
       <el-form-item label="商品相册：">
-        <multi-upload v-model="selectProductPics"></multi-upload>
+        <multi-upload v-model="imagesList"></multi-upload>
       </el-form-item>
       <el-form-item label="商品名称：" prop="name">
-        <el-input v-model="value.name"></el-input>
+        <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="商品售价：" prop="price">
-        <el-input type="number" v-model="value.price"></el-input>
+        <el-input type="number" v-model="form.price"></el-input>
       </el-form-item>
        <el-form-item label="商品规格：" prop="spec">
-        <el-input v-model="value.spec"></el-input>
+        <el-input v-model="form.spec"></el-input>
       </el-form-item>
-       <el-form-item label="库存数量：" prop="num">
-        <el-input type="number" v-model="value.num"></el-input>
+       <el-form-item label="库存数量：" prop="stock">
+        <el-input type="number" v-model="form.stock"></el-input>
       </el-form-item>
        <el-form-item label="商品介绍：">
         <el-input
           :autoSize="true"
-          v-model="value.description"
+          v-model="form.detail"
           type="textarea"
           placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="商品上架：">
         <el-switch
-          v-model="value.previewStatus"
-          :active-value="1"
-          :inactive-value="0">
+          v-model="form.status"
+          :active-value="'online'"
+          :inactive-value="'offline'">
         </el-switch>
       </el-form-item>
       <el-form-item style="text-align: center">
@@ -47,6 +47,11 @@
 //   import {fetchListWithChildren} from '@/api/productCate'
 //   import {fetchList as fetchBrandList} from '@/api/brand'
 //   import {getProduct} from '@/api/product';
+import {
+    productAdd,
+    productEdit,
+    productDetail
+  } from "@/api/catApi/goodsApi";
 import MultiUpload from '@/components/Upload/multiUpload'
   export default {
     name: "ProductInfoDetail",
@@ -55,15 +60,15 @@ import MultiUpload from '@/components/Upload/multiUpload'
     },
     data() {
       return {
-        value: {
-            
+        form: {
+            images:null
         },
-        selectProductPics: ['http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg', 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ac1bf5fN2522b9dc.jpg'],
         hasEditCreated:false,
+        imagesList: [],
         //选中商品分类的值
-        selectProductCateValue: [],
-        productCateOptions: [],
-        brandOptions: [],
+        // selectProductCateValue: [],
+        // productCateOptions: [],
+        // brandOptions: [],
         rules: {
           name: [
             {required: true, message: '请输入商品名称', trigger: 'blur'},
@@ -76,7 +81,10 @@ import MultiUpload from '@/components/Upload/multiUpload'
       };
     },
     created() {
-      
+      this.id = this.$route.query.id;
+      if(this.id){
+        this.productDetail();
+      }
     },
     
     methods: {
@@ -87,10 +95,46 @@ import MultiUpload from '@/components/Upload/multiUpload'
       handleSave(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            
+            this.form.images = this.imagesList && this.imagesList[0]
+            if(this.id){
+              this.productEdit();
+            }else{
+              this.productAdd()
+            }
           }
         });
       },
+      productAdd(){
+        productAdd(this.form).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '保存成功',
+              type: 'success',
+              duration: 1000
+            });
+            this.$router.go(-1);
+          }
+        })
+      },
+      productEdit(){
+        productEdit(this.id, this.form).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          }
+        })
+      },
+      productDetail(){
+        productDetail(this.id).then(res=>{
+          if(res.code == '200'){
+            this.form = res.data;
+            this.imagesList.push(this.form.images);
+          }
+        })
+      }
     }
   }
 </script>

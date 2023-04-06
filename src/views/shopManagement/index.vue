@@ -67,11 +67,16 @@
             @sizeChange="sizeChange"
             @currentChange="currentChange"
             @handleOperation="handleOperation"
+            @switchChange="switchChange"
             ></custom-table>
     </div>
   </div>
 </template>
 <script>
+  import {
+    productList,
+    productStatus
+  } from "@/api/catApi/goodsApi";
   import CustomTable from "@/components/CustomTable/index.vue"
   import { shopTabHead } from "./table.js";
   export default {
@@ -82,19 +87,22 @@
     data() {
       return {
         // 主表默认配置
-        viewTableData: [{oderCode:'13123131232'}],
+        viewTableData: [],
         shopTabHead: shopTabHead, //主表表头
         total: 0,//主表数据长度
         currentSize: 10,//主表分页size
-        currentPage: 1,//主表分页page
-        listQuery: {},
+        currentPage: 0,//主表分页page
+        listQuery: {
+          page: 0,
+          size: 5
+        },
         mainButtons:{
             list:[
                 {
                     label: "编辑",
                     type: "text",
                     size: "mini",
-                    method: "copy",
+                    method: "edit",
                     if: () => {
                     return true;
                     },
@@ -115,7 +123,7 @@
       }
     },
     created() {
-      
+      this.productList();
     },
     // filters: {
     //   formatCreateTime(time) {
@@ -155,6 +163,15 @@
     //   },
     // },
     methods: {
+      productList(){
+        productList(this.listQuery).then((res)=>{
+           if(res.code == '200'){
+            let { records, total} = res.data;
+            this.viewTableData = records || [];
+            this.total = total
+           }
+        })
+      },
       doubleClick(){
 
       },
@@ -164,24 +181,79 @@
       getSelection(){
 
       },
-      sizeChange() {
-
+      sizeChange(val) {
+        this.currentSize = val
+        this.listQuery.size = this.currentSize
+        this.productList()
       },
-      currentChange() {
-
+      currentChange(val) {
+        this.currentPage = val
+        this.listQuery.page = this.currentPage
+        this.productList()
       },
-      handleOperation() {
-
+      handleResetSize() {
+        this.currentPage = 1
+        this.listQuery.page = this.currentPage
+      },
+      handleOperation(param) {
+        console.log('param',param)
+        switch(param.method){
+          case 'edit':
+            this.$router.push({ 
+              path:'/shopManagement/shop/add',
+              query:{
+                  id: param.row.id
+              }
+            });
+            break;
+          case 'delete':
+            this.goodDelete(param.row)
+            break;
+        }
       },
       handleAddShop() {
          this.$router.push(
            { 
                 path:'/shopManagement/shop/add',
-                query:{
-                    id:''
-                }
             }
         );
+      },
+      handleSearchList(){
+        this.handleResetSize();
+        this.productList()
+      },
+      handleResetSearch(){
+
+      },
+      switchChange(data){
+        let params = {
+          id: data.detail.row.id,
+          status: data.detail.value
+        }
+        productStatus(params).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          }
+        })
+      },
+      goodDelete(data){
+        let params = {
+          id: data.id,
+          status: 'delete'
+        }
+        productStatus(params).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 1000
+            });
+          }
+        })
       }
     }
   }

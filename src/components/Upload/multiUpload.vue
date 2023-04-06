@@ -2,7 +2,7 @@
   <div>
     <el-upload
       :action="useOss?ossUploadUrl:minioUploadUrl"
-      :data="useOss?dataObj:null"
+      :data="data"
       list-type="picture-card"
       :file-list="fileList"
       :before-upload="beforeUpload"
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+  import { getToken } from '@/utils/auth'
   import {policy} from '@/api/oss'
 
   export default {
@@ -35,6 +36,9 @@
     },
     data() {
       return {
+        data:{
+          type:'banner'
+        },
         dataObj: {
           policy: '',
           signature: '',
@@ -47,7 +51,11 @@
         dialogImageUrl:null,
         useOss:false, //使用oss->true;使用MinIO->false
         ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:'https://admin-api.macrozheng.com/minio/upload',
+        // minioUploadUrl:'https://admin-api.macrozheng.com/minio/upload',
+         minioUploadUrl: 'https://mc.hongfeigg.com/api/common/upload/image',
+         header:{
+            'token': getToken()
+         }
       };
     },
     computed: {
@@ -99,8 +107,9 @@
         let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
         if(!this.useOss){
           //不使用oss直接获取图片路径
-          url = res.data.url;
+          url = res.data[0]//res.data.url;
         }
+        console.log('url+++++', res, file)
         this.fileList.push({name: file.name,url:url});
         this.emitInput(this.fileList);
       },

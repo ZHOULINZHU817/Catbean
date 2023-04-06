@@ -58,6 +58,28 @@
                             previewImages(scope.row, item.fieldNo)
                         }">查看文件</a>
                 </template>
+                <template v-else-if="(scope.row.images && item.fieldNo == 'images')">
+                    <img style="height:60px;width:80%;" :src="scope.row.images" />
+                </template>
+                <template v-else-if="(item.fieldNo == 'status')">
+                    <el-switch
+                        v-model="scope.row.status"
+                        :active-value="'online'"
+                        :inactive-value="'offline'"
+                        @change="(value)=>{
+                            switchChange({
+                                detail:{
+                                    value:value,
+                                    key: item.fieldNo,
+                                    keyName:item.fieldNo,
+                                    index:scope.$index,
+                                    row:scope.row
+                                }
+                            })
+                        }"
+                    >
+                    </el-switch>
+                </template>
                 <template v-else-if="scope.row.render && item.fieldNo in scope.row.render && scope.row.render[item.fieldNo].type == 'input'">
                     {{item.fieldNo | spliceField(scope.row)}}
                 </template>
@@ -848,6 +870,9 @@ export default {
         setCurrentRow(row) {
             this.$refs.dataTable.setCurrentRow(row);
         },
+        switchChange(param){
+            this.$emit("switchChange",param)
+        }
     },
     watch: {
         tableHead:{

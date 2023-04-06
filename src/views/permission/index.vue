@@ -30,16 +30,16 @@
         >
           <el-form-item label="输入搜索：">
             <el-input
-              v-model="listQuery.keyword"
+              v-model="listQuery.phone"
               class="input-width"
-              placeholder="角色名称"
+              placeholder="请输入用户名称"
               clearable
             ></el-input>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
-    <el-card class="operate-container" shadow="never">
+    <!-- <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
       <el-button
@@ -49,7 +49,7 @@
         style="margin-left: 20px"
         >添加</el-button
       >
-    </el-card>
+    </el-card> -->
     <div class="table-container">
       <el-table
         ref="roleTable"
@@ -58,24 +58,13 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column label="编号" width="100" align="center">
+        <el-table-column label="ID" width="100" align="center">
           <template slot-scope="scope">{{ scope.row.id }}</template>
         </el-table-column>
-        <el-table-column label="角色名称" align="center">
-          <template slot-scope="scope">{{ scope.row.name }}</template>
+        <el-table-column label="名称" align="center">
+          <template slot-scope="scope">{{ scope.row.phone }}</template>
         </el-table-column>
-        <el-table-column label="描述" align="center">
-          <template slot-scope="scope">{{ scope.row.description }}</template>
-        </el-table-column>
-        <el-table-column label="用户数" width="100" align="center">
-          <template slot-scope="scope">{{ scope.row.adminCount }}</template>
-        </el-table-column>
-        <el-table-column label="添加时间" width="160" align="center">
-          <template slot-scope="scope">{{
-            scope.row.createTime | formatDateTime
-          }}</template>
-        </el-table-column>
-        <el-table-column label="是否启用" width="140" align="center">
+        <!-- <el-table-column label="是否启用" width="140" align="center">
           <template slot-scope="scope">
             <el-switch
               @change="handleStatusChange(scope.$index, scope.row)"
@@ -85,7 +74,7 @@
             >
             </el-switch>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
             <el-row>
@@ -95,7 +84,7 @@
                 @click="handleSelectMenu(scope.$index, scope.row)"
                 >分配菜单
               </el-button>
-              <el-button
+              <!-- <el-button
                 size="mini"
                 type="text"
                 @click="handleUpdate(scope.$index, scope.row)"
@@ -107,7 +96,7 @@
                 type="text"
                 @click="handleDelete(scope.$index, scope.row)"
                 >删除
-              </el-button>
+              </el-button> -->
             </el-row>
           </template>
         </el-table-column>
@@ -119,14 +108,14 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
-        :current-page.sync="listQuery.pageNum"
-        :page-size="listQuery.pageSize"
+        :current-page.sync="listQuery.page"
+        :page-size="listQuery.size"
         :page-sizes="[5, 10, 15]"
         :total="total"
       >
       </el-pagination>
     </div>
-    <el-dialog
+    <!-- <el-dialog
       :title="isEdit ? '编辑角色' : '添加角色'"
       :visible.sync="dialogVisible"
       width="40%"
@@ -156,7 +145,7 @@
           >确 定</el-button
         >
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <el-dialog
       title="菜单权限"
@@ -182,19 +171,19 @@
 </template>
 <script>
 import {
-  fetchList,
-  createRole,
-  updateRole,
-  updateStatus,
-  deleteRole,
-} from "@/api/role";
+  getAdminList,
+  getTreeList,
+  getAssignPermissions,
+  getHavePermissions
+} from "@/api/login";
 import { formatDate } from "@/utils/date";
 import CustomForm from "@/components/CustomForm/indexNew.vue"
 
 const defaultListQuery = {
-  pageNum: 1,
-  pageSize: 5,
-  keyword: null,
+  page: 1,
+  size: 5,
+  // keyword: null,
+  phone: null
 };
 const defaultRole = {
   id: null,
@@ -230,17 +219,7 @@ export default {
             type: 'checkbox',
             formMaxWidth: 24,
             list:[
-              {label:'抢购订单信息', value: '1'},
-              {label:'猫豆充值', value: '2'},
-              {label:'猫豆提现审核', value: '3'},
-              {label:'会员列表', value: '4'},
-              {label:'公告消息', value: '5'},
-              {label:'猫超商品列表', value: '6'},
-              {label:'猫超订单管理', value: '7'},
-              {label:'首页轮播图管理', value: '8'},
-              {label:'APP版本号管理', value: '9'},
-              {label:'权限管理', value: '10'},
-              {label:'客服微信', value: '11'},
+             
             ]
         },
       ],
@@ -248,6 +227,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getTreeListData();
   },
   filters: {
     formatDateTime(time) {
@@ -263,99 +243,101 @@ export default {
       this.listQuery = Object.assign({}, defaultListQuery);
     },
     handleSearchList() {
-      this.listQuery.pageNum = 1;
+      this.listQuery.page = 1;
       this.getList();
     },
     handleSizeChange(val) {
-      this.listQuery.pageNum = 1;
-      this.listQuery.pageSize = val;
+      this.listQuery.page = 1;
+      this.listQuery.size = val;
       this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val;
+      this.listQuery.page = val;
       this.getList();
     },
-    handleAdd() {
-      this.dialogVisible = true;
-      this.isEdit = false;
-      this.role = Object.assign({}, defaultRole);
-    },
-    handleStatusChange(index, row) {
-      this.$confirm("是否要修改该状态?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          updateStatus(row.id, { status: row.status }).then((response) => {
-            this.$message({
-              type: "success",
-              message: "修改成功!",
-            });
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消修改",
-          });
-          this.getList();
-        });
-    },
-    handleDelete(index, row) {
-      this.$confirm("是否要删除该角色?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        let ids = [];
-        ids.push(row.id);
-        let params = new URLSearchParams();
-        params.append("ids", ids);
-        deleteRole(params).then((response) => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-          this.getList();
-        });
-      });
-    },
-    handleUpdate(index, row) {
-      this.dialogVisible = true;
-      this.isEdit = true;
-      this.role = Object.assign({}, row);
-    },
-    handleDialogConfirm() {
-      this.$confirm("是否要确认?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        if (this.isEdit) {
-          updateRole(this.role.id, this.role).then((response) => {
-            this.$message({
-              message: "修改成功！",
-              type: "success",
-            });
-            this.dialogVisible = false;
-            this.getList();
-          });
-        } else {
-          createRole(this.role).then((response) => {
-            this.$message({
-              message: "添加成功！",
-              type: "success",
-            });
-            this.dialogVisible = false;
-            this.getList();
-          });
-        }
-      });
-    },
+    // handleAdd() {
+    //   this.dialogVisible = true;
+    //   this.isEdit = false;
+    //   this.role = Object.assign({}, defaultRole);
+    // },
+    // handleStatusChange(index, row) {
+    //   this.$confirm("是否要修改该状态?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(() => {
+    //       updateStatus(row.id, { status: row.status }).then((response) => {
+    //         this.$message({
+    //           type: "success",
+    //           message: "修改成功!",
+    //         });
+    //       });
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         type: "info",
+    //         message: "取消修改",
+    //       });
+    //       this.getList();
+    //     });
+    // },
+    // handleDelete(index, row) {
+    //   this.$confirm("是否要删除该角色?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   }).then(() => {
+    //     let ids = [];
+    //     ids.push(row.id);
+    //     let params = new URLSearchParams();
+    //     params.append("ids", ids);
+    //     deleteRole(params).then((response) => {
+    //       this.$message({
+    //         type: "success",
+    //         message: "删除成功!",
+    //       });
+    //       this.getList();
+    //     });
+    //   });
+    // },
+    // handleUpdate(index, row) {
+    //   this.dialogVisible = true;
+    //   this.isEdit = true;
+    //   this.role = Object.assign({}, row);
+    // },
+    // handleDialogConfirm() {
+    //   this.$confirm("是否要确认?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   }).then(() => {
+    //     if (this.isEdit) {
+    //       updateRole(this.role.id, this.role).then((response) => {
+    //         this.$message({
+    //           message: "修改成功！",
+    //           type: "success",
+    //         });
+    //         this.dialogVisible = false;
+    //         this.getList();
+    //       });
+    //     } else {
+    //       createRole(this.role).then((response) => {
+    //         this.$message({
+    //           message: "添加成功！",
+    //           type: "success",
+    //         });
+    //         this.dialogVisible = false;
+    //         this.getList();
+    //       });
+    //     }
+    //   });
+    // },
     handleSelectMenu(index, row) {
       // this.$router.push({ path: "/ums/allocMenu", query: { roleId: row.id } });
       this.menuPermissionVisible = true;
+      this.row = row;
+      this.getHavePermissions(row.id);
     },
     handleSelectResource(index, row) {
       this.$router.push({
@@ -365,9 +347,11 @@ export default {
     },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
+       const params = Object.assign({}, this.listQuery)
+       params.page = params.page-1;
+      getAdminList(params).then((response) => {
         this.listLoading = false;
-        this.list = response.data.list;
+        this.list = response.data.records;
         this.total = response.data.total;
       });
     },
@@ -375,6 +359,36 @@ export default {
     /**新街口** */
     handleConfirm() {
       this.menuPermissionVisible = false;
+      getAssignPermissions(this.row.id, this.form.menuPermission).then(res=>{
+        if(res.code == '200'){
+            this.$message({
+              message: '保存成功',
+              type: 'success',
+              duration: 1000
+            });
+        }
+      })
+    },
+    /**菜单接口** */
+    getTreeListData() {
+      getTreeList().then((response) => {
+        if(response.code == '200'){
+           response.data.map(item=>{
+            item.label = item.title;
+            item.value = item.id;
+           })
+           this.$set(this.fields[0], 'list', response.data)
+        }
+      });
+    },
+    /**请求菜单权限** */
+    getHavePermissions(id){
+      getHavePermissions(id,{}).then(res=>{
+        if(res.code == '200'){
+          let data = res.data || [];
+          this.$set(this.form, 'menuPermission', data)
+        }
+      })
     }
   },
 };

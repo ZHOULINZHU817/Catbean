@@ -15,8 +15,8 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
-          let menus=res.data.menus;
-          let username=res.data.username;
+          let menus=res.data.permissions;
+          let username=res.data.phone;
           store.dispatch('GenerateRoutes', { menus,username }).then(() => { // 生成可访问的路由表
             router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表
             next({ ...to, replace: true })

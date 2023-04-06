@@ -363,18 +363,18 @@ export const asyncRouterMap = [
     path:'/shopManagement',
     component: Layout,
     redirect: '/shopManagement/shop',
-    name: 'shopManagement',
+    name: 'productManger',
     meta: {title: '猫超商品管理', icon: 'product'},
     children: [
       {
         path: 'shop',
-        name: 'shop',
+        name: 'productList',
         component: () => import('@/views/shopManagement/index'),
         meta: {title: '猫超商品管理', icon: 'product'}
       },
       {
         path: 'shop/add',
-        name: 'shop/add',
+        name: 'shopAdd',
         component: () => import('@/views/shopManagement/add'),
         meta: {title: '商品详情', icon: 'product-add'},
         hidden: true
@@ -499,6 +499,28 @@ export const asyncRouterMap = [
         name: 'permissionManagement',
         component: () => import('@/views/permission/index'),
         meta: {title: '权限管理', icon: 'ums-role'}
+      },
+    ]
+  },
+  {
+    path:'/notice',
+    component: Layout,
+    redirect: '/notice/news',
+    name: 'notice',
+    meta: {title: '公告消息', icon: 'ums-role'},
+    children: [
+      {
+        path: 'news',
+        name: 'news',
+        component: () => import('@/views/notice/index'),
+        meta: {title: '公告消息', icon: 'ums-role'}
+      },
+      {
+        path: 'news/add',
+        name: 'newsAdd',
+        component: () => import('@/views/notice/add'),
+        meta: {title: '新增消息', icon: 'product-add'},
+        hidden: true
       },
     ]
   },

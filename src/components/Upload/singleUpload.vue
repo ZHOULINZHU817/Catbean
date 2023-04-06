@@ -65,7 +65,8 @@
         dialogVisible: false,
         useOss:false, //使用oss->true;使用MinIO->false
         ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:'https://admin-api.macrozheng.com/minio/upload',
+        // minioUploadUrl:'https://admin-api.macrozheng.com/minio/upload',
+         minioUploadUrl: 'https://mc.hongfeigg.com/api/common/upload/image'
       };
     },
     methods: {
