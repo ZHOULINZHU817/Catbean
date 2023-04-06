@@ -19,11 +19,11 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.orderSn" class="input-width" placeholder="订单编号"></el-input>
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="输入搜索：" prop="name">
+            <el-input v-model="listQuery.name" class="input-width" placeholder="请输入商品名称"></el-input>
           </el-form-item>
-          <el-form-item label="提交时间：">
+          <!-- <el-form-item label="提交时间：">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
@@ -34,7 +34,7 @@
               end-placeholder="结束日期"
               placeholder="请选择时间">
             </el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
     </el-card>
@@ -51,8 +51,9 @@
         <custom-table
             :tableData="viewTableData"
             :tableHead="shopTabHead"
-            :isShowSelection="true"
+            :isShowSelection="false"
             :sortable="true"
+            :isShowSeq="true"
             :isShowPage="true"
             :currentSize="currentSize"
             :currentPage="currentPage"
@@ -60,6 +61,7 @@
             :total="total"
             :rowEdit="true"
             :highlightCurrentRow="true"
+            :height="'400'"
             :buttons="mainButtons"
             @doubleClick="doubleClick"
             @getRowData="getRowData"
@@ -192,8 +194,8 @@
         this.productList()
       },
       handleResetSize() {
-        this.currentPage = 1
-        this.listQuery.page = this.currentPage
+        this.currentPage = 0
+        this.listQuery.page = this.currentPage;
       },
       handleOperation(param) {
         console.log('param',param)
@@ -223,7 +225,7 @@
         this.productList()
       },
       handleResetSearch(){
-
+        this.$refs['listQuery'].resetFields();
       },
       switchChange(data){
         let params = {

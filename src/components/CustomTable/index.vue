@@ -42,6 +42,16 @@
             :prop="sortCollumn == 'selection'?sortProp:''"
             :reserve-selection="reserveSelection"
         />
+         <el-table-column
+            label="序号"
+            align="center"
+            type="index"
+            width="50"
+            v-if="isShowSeq"
+            :fixed="fixed['seq']"
+            :prop="sortCollumn == 'index'?sortProp:''"
+        >
+        </el-table-column>
         <el-table-column
             v-for="(item, key) in tableHead"
             :key="key"
