@@ -5,9 +5,12 @@
       <el-form-item label="标题：" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
+       <el-form-item label="链接：" prop="link">
+        <el-input v-model="form.link"></el-input>
+      </el-form-item>
        <el-form-item label="内容介绍：">
         <el-input
-          v-model="form.description"
+          v-model="form.content"
           type="textarea"
           :rows="10"
           placeholder="请输入内容"></el-input>
@@ -20,7 +23,7 @@
 </template>
 
 <script>
-
+  import {noticeAdd, noticeEdit} from "@/api/catApi/noticeApi"
   export default {
     name: "newsDetail",
     components: {
@@ -33,28 +36,64 @@
         },
         rules: {
           name: [
-            {required: true, message: '请输入商品名称', trigger: 'blur'},
+            {required: true, message: '请输入公告标题名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
+          // link:[]
         }
       };
     },
     created() {
-      
+      this.id = this.$route.query.id;
+      if(this.id){
+        this.noticeDetail();
+      }
     },
     
     methods: {
-      handleBrandChange(){
-
-      },
       //保存商品
       handleSave(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            
+            if(this.id){
+              this.getNoticeEdit();
+            }else{
+              this.getNoticeAdd();
+            }
           }
         });
       },
+      getNoticeAdd() {
+        noticeAdd(this.form).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '保存成功',
+              type: 'success',
+              duration: 1000
+            });
+            this.$router.go(-1);
+          }
+        })
+      },
+      getNoticeEdit() {
+         noticeEdit(this.form).then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          }
+        })
+      },
+      /***查询详情的接口* */
+      noticeDetail(){
+        // noticeDetail().then(res=>{
+        //   if(res.code == '200'){
+        //     this.form = res.data;
+        //   }
+        // })
+      }
     }
   }
 </script>

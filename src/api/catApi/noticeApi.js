@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 
-export function noticeAdd(params) {
+export function noticeAdd(data) {
     return request({
         url: '/api/sys/notice', //添加公告
         method: 'post',
-        params: params
+        data: data
     })
 }
 export function noticeDelete(id, data) {
@@ -23,10 +23,10 @@ export function noticeList(params) {
     })
 }
 
-export function noticeEdit(params) {
+export function noticeEdit(data) {
     return request({
         url: '/api/sys/notice', //修改公告
         method: 'put',
-        params: params
+        data: data
     })
 }

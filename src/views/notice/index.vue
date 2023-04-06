@@ -19,11 +19,11 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.orderSn" class="input-width" placeholder="订单编号"></el-input>
-          </el-form-item> -->
-          <el-form-item label="提交时间：">
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="输入搜索：" prop="title">
+            <el-input v-model="listQuery.title" class="input-width" placeholder="请输入公告标题"></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="提交时间：" prop="createTime">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
@@ -34,7 +34,7 @@
               end-placeholder="结束日期"
               placeholder="请选择时间">
             </el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
     </el-card>
@@ -54,9 +54,11 @@
             :isShowSelection="true"
             :sortable="true"
             :isShowPage="true"
+            :isShowSeq="true"
             :currentSize="currentSize"
             :currentPage="currentPage"
             :buttonCellWidth="200"
+            :height="'400'"
             :total="total"
             :rowEdit="true"
             :highlightCurrentRow="true"
@@ -74,6 +76,7 @@
 <script>
   import CustomTable from "@/components/CustomTable/index.vue"
   import { newsTabHead } from "./table.js";
+  import {noticeDelete, noticeList,} from "@/api/catApi/noticeApi"
   export default {
     name: "orderList",
     components:{
@@ -82,19 +85,22 @@
     data() {
       return {
         // 主表默认配置
-        viewTableData: [{title:'13123131232'}],
+        viewTableData: [],
         newsTabHead: newsTabHead, //主表表头
         total: 0,//主表数据长度
-        currentSize: 10,//主表分页size
-        currentPage: 1,//主表分页page
-        listQuery: {},
+        currentSize: 5,//主表分页size
+        currentPage: 0,//主表分页page
+        listQuery: {
+          page: 0,
+          size: 5,
+        },
         mainButtons:{
             list:[
                 {
                     label: "编辑",
                     type: "text",
                     size: "mini",
-                    method: "copy",
+                    method: "edit",
                     if: () => {
                     return true;
                     },
@@ -116,6 +122,9 @@
     created() {
       
     },
+    mounted(){
+      this.getNoticeList();
+    },
     methods: {
       doubleClick(){
 
@@ -126,24 +135,71 @@
       getSelection(){
 
       },
-      sizeChange() {
-
+      handleSearchList(){
+        this.handleResetSize();
+        this.getNoticeList()
       },
-      currentChange() {
-
+      handleResetSearch(){
+        this.$refs['listQuery'].resetFields();
       },
-      handleOperation() {
-
+      sizeChange(val) {
+        this.currentSize = val
+        this.listQuery.size = this.currentSize
+        this.getNoticeList()
+      },
+      currentChange(val) {
+        this.currentPage = val
+        this.listQuery.page = this.currentPage-1;
+        this.getNoticeList()
+      },
+      handleResetSize() {
+        this.currentPage = 0
+        this.listQuery.page = this.currentPage;
+      },
+      handleOperation(param) {
+        switch(param.method){
+          case 'edit':
+            this.$router.push({ 
+              path:'/notice/news/add',
+              query:{
+                  id: param.row.id
+              }
+            });
+            break;
+          case 'delete':
+            this.setNoticeDelete(param.row)
+            break;
+        }
       },
       handleAddShop() {
          this.$router.push(
            { 
-                path:'/notice/news/add',
-                query:{
-                    id:''
-                }
+              path:'/notice/news/add'
             }
         );
+      },
+      /***列表 */
+      getNoticeList(){
+        noticeList(this.listQuery).then(res=>{
+          if(res.code == '200'){
+            let { records, total} = res.data;
+            this.viewTableData = records || [];
+            this.total = total
+          }
+        })
+      },
+      //删除
+      setNoticeDelete(){
+        noticeDelete().then(res=>{
+          if(res.code == '200'){
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 1000
+            });
+            this.getNoticeList();
+          }
+        })
       }
     }
   }

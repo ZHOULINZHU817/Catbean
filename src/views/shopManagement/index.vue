@@ -92,7 +92,7 @@
         viewTableData: [],
         shopTabHead: shopTabHead, //主表表头
         total: 0,//主表数据长度
-        currentSize: 10,//主表分页size
+        currentSize: 5,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
@@ -190,7 +190,7 @@
       },
       currentChange(val) {
         this.currentPage = val
-        this.listQuery.page = this.currentPage
+        this.listQuery.page = this.currentPage-1
         this.productList()
       },
       handleResetSize() {
@@ -198,7 +198,6 @@
         this.listQuery.page = this.currentPage;
       },
       handleOperation(param) {
-        console.log('param',param)
         switch(param.method){
           case 'edit':
             this.$router.push({ 

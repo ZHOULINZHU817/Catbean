@@ -275,7 +275,7 @@ export default {
         pageSizes: {
             type: Array,
             default: () => {
-                return [10, 20, 30, 40, 100];
+                return [5, 10, 20, 30, 40, 100];
             },
         },
         currentPage: {
@@ -284,7 +284,7 @@ export default {
         },
         currentSize: {
             type: Number,
-            default: 10,
+            default: 5,
         },
         total: {
             type: Number,
