@@ -69,13 +69,13 @@
                         }">查看文件</a>
                 </template>
                 <template v-else-if="(scope.row.images && item.fieldNo == 'images')">
-                    <img style="height:60px;width:80%;" :src="scope.row.images" />
+                    <img style="height:60px;width:80%;" :src="Array.isArray(scope.row.images)?scope.row.images[0] : scope.row.images" />
                 </template>
                 <template v-else-if="(item.fieldNo == 'status')">
                     <el-switch
                         v-model="scope.row.status"
-                        :active-value="'online'"
-                        :inactive-value="'offline'"
+                        :active-value="true"
+                        :inactive-value="false"
                         @change="(value)=>{
                             switchChange({
                                 detail:{
@@ -90,6 +90,7 @@
                     >
                     </el-switch>
                 </template>
+                 <template v-else-if="(item.fieldNo == 'createTime')"> {{scope.row[item.fieldNo] | formatDate}}</template>
                 <template v-else-if="scope.row.render && item.fieldNo in scope.row.render && scope.row.render[item.fieldNo].type == 'input'">
                     {{item.fieldNo | spliceField(scope.row)}}
                 </template>
@@ -185,7 +186,7 @@
 </template>
 
 <script>
-
+import { formatDate } from "@/utils/date"
 export default {
     name: "Index",
     props: {
@@ -418,7 +419,12 @@ export default {
             radio: 0,
         };
     },
-
+    filters:{
+      formatDate(time) {
+        let date = new Date(time*1);
+        return time?formatDate(date, 'yyyy-MM-dd hh:mm:ss'):''
+      }
+    },
     mounted() {
         this.$table = this.$el;
         if (!this.cssSetHeight) {

@@ -39,5 +39,21 @@ export function productStatus(data) {
     })
 }
 
+export function productOrderList(params) {
+    return request({
+        url: '/api/sys/record/product/list', //猫超商品订单列表接口
+        method: 'get',
+        params: params
+    })
+}
+
+export function productOrderSend(data) {
+    return request({
+        url: '/api/sys/manager/record/product/send', //猫超商品订单列表接口
+        method: 'put',
+        data: data
+    })
+}
+
 
 

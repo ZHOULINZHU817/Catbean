@@ -64,23 +64,7 @@ export function getHavePermissions(id,params) { //账号权限查询
   })
 }
 
-export function memberList(params) { //会员列表
-  return request({
-    // url: '/admin/list',
-     url: `/api/sys/manager/member/list`,
-    method: 'get',
-    params: params
-  })
-}
 
-export function memberPhone(params) { //根据手机号查询会员
-  return request({
-    // url: '/admin/list',
-     url: `/api/sys/manager/member/phone`,
-    method: 'get',
-    params: params
-  })
-}
 
 
 

@@ -11,7 +11,7 @@ export function noticeAdd(data) {
 export function noticeDelete(id, data) {
     return request({
         url: '/api/sys/notice/' + id, //删除公告
-        method: 'post',
+        method: 'delete',
         data: data
     })
 }
@@ -30,3 +30,12 @@ export function noticeEdit(data) {
         data: data
     })
 }
+
+export function noticeDetail(id, params) {
+    return request({
+        url: '/api/sys/notice/'+id, //公告详情
+        method: 'get',
+        params: params
+    })
+}
+

@@ -20,25 +20,25 @@
       </div>
       <div style="margin-top: 15px">
         <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：" prop="title">
-            <el-input v-model="listQuery.title" class="input-width" placeholder="请输入公告标题"></el-input>
+          <el-form-item label="输入搜索：" prop="memberPhone">
+            <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
           </el-form-item>
-          <!-- <el-form-item label="提交时间：" prop="createTime">
+          <el-form-item label="充值时间：">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
-              value-format="yyyy-MM-dd"
-              type="daterange"
+              value-format="timestamp"
+              type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               placeholder="请选择时间">
             </el-date-picker>
-          </el-form-item> -->
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
-    <el-card class="operate-container" shadow="never">
+    <!-- <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
       <el-button
@@ -46,22 +46,22 @@
         @click="handleAddShop"
         class="btn-add">添加
       </el-button>
-    </el-card>
+    </el-card> -->
     <div class="table-container">
         <custom-table
             :tableData="viewTableData"
-            :tableHead="newsTabHead"
-            :isShowSelection="true"
+            :tableHead="rechargTabHead"
+            :isShowSelection="false"
             :sortable="true"
-            :isShowPage="true"
             :isShowSeq="true"
+            :isShowPage="true"
             :currentSize="currentSize"
             :currentPage="currentPage"
             :buttonCellWidth="200"
-            :height="'400'"
             :total="total"
             :rowEdit="true"
             :highlightCurrentRow="true"
+            :height="'400'"
             :buttons="mainButtons"
             @doubleClick="doubleClick"
             @getRowData="getRowData"
@@ -74,11 +74,11 @@
   </div>
 </template>
 <script>
+  import { rechargeList } from "@/api/catApi/memberApi"
   import CustomTable from "@/components/CustomTable/index.vue"
-  import { newsTabHead } from "./table.js";
-  import {noticeDelete, noticeList,} from "@/api/catApi/noticeApi"
+  import { rechargTabHead } from "./table.js";
   export default {
-    name: "orderList",
+    name: "rechargeList",
     components:{
         CustomTable
     },
@@ -86,46 +86,61 @@
       return {
         // 主表默认配置
         viewTableData: [],
-        newsTabHead: newsTabHead, //主表表头
+        rechargTabHead: rechargTabHead, //主表表头
         total: 0,//主表数据长度
         currentSize: 5,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
           size: 5,
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
         },
         mainButtons:{
             list:[
-                {
-                    label: "编辑",
-                    type: "text",
-                    size: "mini",
-                    method: "edit",
-                    if: () => {
-                    return true;
-                    },
-                },
-                {
-                    label: "删除",
-                    type: "text",
-                    size: "mini",
-                    method: "delete",
-                    class: "delete",
-                    if: () => {
-                    return true;
-                    },
-                },
+                // {
+                //     label: "编辑",
+                //     type: "text",
+                //     size: "mini",
+                //     method: "edit",
+                //     if: () => {
+                //     return true;
+                //     },
+                // },
+                // {
+                //     label: "删除",
+                //     type: "text",
+                //     size: "mini",
+                //     method: "delete",
+                //     class: "delete",
+                //     if: () => {
+                //     return true;
+                //     },
+                // },
             ],
         },
+        activeName:'appointment'
       }
     },
     created() {
-      
-    },
-    mounted(){
-      this.getNoticeList();
+      this.rechargeList();
     },
     methods: {
+      rechargeList(){
+        let params = {
+            begin: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[0],
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            memberPhone: this.listQuery.memberPhone,
+        }
+        rechargeList(params).then((res)=>{
+           if(res.code == '200'){
+            let { records, total} = res.data;
+            this.viewTableData = records || [];
+            this.total = total
+           }
+        })
+      },
       doubleClick(){
 
       },
@@ -135,71 +150,41 @@
       getSelection(){
 
       },
-      handleSearchList(){
-        this.handleResetSize();
-        this.getNoticeList()
-      },
-      handleResetSearch(){
-        this.$refs['listQuery'].resetFields();
-      },
       sizeChange(val) {
         this.currentSize = val
         this.listQuery.size = this.currentSize
-        this.getNoticeList()
+        this.rechargeList()
       },
       currentChange(val) {
         this.currentPage = val
-        this.listQuery.page = this.currentPage-1;
-        this.getNoticeList()
+        this.listQuery.page = this.currentPage-1
+        this.rechargeList()
       },
       handleResetSize() {
         this.currentPage = 0
         this.listQuery.page = this.currentPage;
       },
       handleOperation(param) {
-        switch(param.method){
-          case 'edit':
-            this.$router.push({ 
-              path:'/notice/news/add',
-              query:{
-                  id: param.row.id
-              }
-            });
-            break;
-          case 'delete':
-            this.setNoticeDelete(param.row)
-            break;
-        }
+        // switch(param.method){
+        //   case 'edit':
+        //     this.$router.push({ 
+        //       path:'/banner/picture/add',
+        //       query:{
+        //           id: param.row.id
+        //       }
+        //     });
+        //     break;
+        //   case 'delete':
+        //     this.goodDelete(param.row)
+        //     break;
+        // }
       },
-      handleAddShop() {
-         this.$router.push(
-           { 
-              path:'/notice/news/add'
-            }
-        );
+      handleSearchList(){
+        this.handleResetSize();
+        this.rechargeList()
       },
-      /***列表 */
-      getNoticeList(){
-        noticeList(this.listQuery).then(res=>{
-          if(res.code == '200'){
-            let { records, total} = res.data;
-            this.viewTableData = records || [];
-            this.total = total
-          }
-        })
-      },
-      //删除
-      setNoticeDelete(data){
-        noticeDelete(data.id).then(res=>{
-          if(res.code == '200'){
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration: 1000
-            });
-            this.getNoticeList();
-          }
-        })
+      handleResetSearch(){
+        this.$refs['listQuery'].resetFields();
       }
     }
   }

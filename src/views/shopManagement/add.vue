@@ -95,7 +95,7 @@ import MultiUpload from '@/components/Upload/multiUpload'
       handleSave(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.form.images = this.imagesList && this.imagesList[0]
+            this.form.images = this.imagesList;
             if(this.id){
               this.productEdit();
             }else{
@@ -131,7 +131,7 @@ import MultiUpload from '@/components/Upload/multiUpload'
         productDetail(this.id).then(res=>{
           if(res.code == '200'){
             this.form = res.data;
-            this.imagesList.push(this.form.images);
+            this.imagesList = this.form.images;
           }
         })
       }

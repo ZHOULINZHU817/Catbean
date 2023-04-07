@@ -50,7 +50,7 @@
     <div class="table-container">
         <custom-table
             :tableData="viewTableData"
-            :tableHead="shopTabHead"
+            :tableHead="addedTabHead"
             :isShowSelection="false"
             :sortable="true"
             :isShowSeq="true"
@@ -69,20 +69,18 @@
             @sizeChange="sizeChange"
             @currentChange="currentChange"
             @handleOperation="handleOperation"
-            @switchChange="switchChange"
             ></custom-table>
     </div>
   </div>
 </template>
 <script>
   import {
-    productList,
-    productStatus
-  } from "@/api/catApi/goodsApi";
+    saleOrderList
+  } from "@/api/catApi/addedOrderApi";
   import CustomTable from "@/components/CustomTable/index.vue"
-  import { shopTabHead } from "./table.js";
+  import { addedTabHead } from "./table.js";
   export default {
-    name: "shopList",
+    name: "addedList",
     components:{
         CustomTable
     },
@@ -90,13 +88,14 @@
       return {
         // 主表默认配置
         viewTableData: [],
-        shopTabHead: shopTabHead, //主表表头
+        addedTabHead: addedTabHead, //主表表头
         total: 0,//主表数据长度
         currentSize: 5,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
-          size: 5
+          size: 5,
+          status:"allocated"
         },
         mainButtons:{
             list:[
@@ -109,69 +108,32 @@
                     return true;
                     },
                 },
-                {
-                    label: "删除",
-                    type: "text",
-                    size: "mini",
-                    method: "delete",
-                    class: "delete",
-                    if: () => {
-                    return true;
-                    },
-                },
+                // {
+                //     label: "删除",
+                //     type: "text",
+                //     size: "mini",
+                //     method: "delete",
+                //     class: "delete",
+                //     if: () => {
+                //     return true;
+                //     },
+                // },
             ],
         },
         activeName:'appointment'
       }
     },
     created() {
-      this.productList();
+      this.saleOrderList();
     },
-    // filters: {
-    //   formatCreateTime(time) {
-    //     let date = new Date(time);
-    //     return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-    //   },
-    //   formatPayType(value) {
-    //     if (value === 1) {
-    //       return '支付宝';
-    //     } else if (value === 2) {
-    //       return '微信';
-    //     } else {
-    //       return '未支付';
-    //     }
-    //   },
-    //   formatSourceType(value) {
-    //     if (value === 1) {
-    //       return 'APP订单';
-    //     } else {
-    //       return 'PC订单';
-    //     }
-    //   },
-    //   formatStatus(value) {
-    //     if (value === 1) {
-    //       return '待发货';
-    //     } else if (value === 2) {
-    //       return '已发货';
-    //     } else if (value === 3) {
-    //       return '已完成';
-    //     } else if (value === 4) {
-    //       return '已关闭';
-    //     } else if (value === 5) {
-    //       return '无效订单';
-    //     } else {
-    //       return '待付款';
-    //     }
-    //   },
-    // },
     methods: {
-      productList(){
-        productList(this.listQuery).then((res)=>{
+      saleOrderList(){
+        saleOrderList(this.listQuery).then((res)=>{
            if(res.code == '200'){
             let { records, total} = res.data;
             this.viewTableData = records || [];
             this.viewTableData.map(item=>{
-              item.status = item.status == 'online'? true: false;
+            //   item.state = item.status == 'online'? true: false;
             })
             this.total = total
            }
@@ -189,12 +151,12 @@
       sizeChange(val) {
         this.currentSize = val
         this.listQuery.size = this.currentSize
-        this.productList()
+        this.saleOrderList()
       },
       currentChange(val) {
         this.currentPage = val
         this.listQuery.page = this.currentPage-1
-        this.productList()
+        this.saleOrderList()
       },
       handleResetSize() {
         this.currentPage = 0
@@ -204,7 +166,7 @@
         switch(param.method){
           case 'edit':
             this.$router.push({ 
-              path:'/shopManagement/shop/add',
+              path:'/goodsAdded/added/edit',
               query:{
                   id: param.row.id
               }
@@ -218,48 +180,17 @@
       handleAddShop() {
          this.$router.push(
            { 
-                path:'/shopManagement/shop/add',
+                path:'/goodsAdded/added/edit',
             }
         );
       },
       handleSearchList(){
         this.handleResetSize();
-        this.productList()
+        this.saleOrderList()
       },
       handleResetSearch(){
         this.$refs['listQuery'].resetFields();
       },
-      switchChange(data){
-        console.log('data.detail.value', data.detail.value)
-        let params = {
-          id: data.detail.row.id,
-          status: data.detail.value?'online':'offline'
-        }
-        productStatus(params).then(res=>{
-          if(res.code == '200'){
-            this.$message({
-              message: '修改成功',
-              type: 'success',
-              duration: 1000
-            });
-          }
-        })
-      },
-      goodDelete(data){
-        let params = {
-          id: data.id,
-          status: 'delete'
-        }
-        productStatus(params).then(res=>{
-          if(res.code == '200'){
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration: 1000
-            });
-          }
-        })
-      }
     }
   }
 </script>

@@ -1,17 +1,17 @@
 import request from '@/utils/request'
 
 
-export function bannerAdd(params) {
+export function bannerAdd(data) {
     return request({
         url: '/api/sys/banner', //添加banner
         method: 'post',
-        params: params
+        data: data
     })
 }
 export function bannerList(params) {
     return request({
         url: '/api/sys/banner/list', //获取banner列表
-        method: 'post',
+        method: 'get',
         params: params
     })
 }
@@ -30,3 +30,20 @@ export function bannerStatus(params) {
         params: params
     })
 }
+
+export function bannerEdit(data) {
+    return request({
+        url: '/api/sys/banner', //修改banner状态
+        method: 'put',
+        data: data
+    })
+}
+
+export function bannerDetail(params) {
+    return request({
+        url: '/api/sys/banner', //修改banner详情
+        method: 'get',
+        params: params
+    })
+}
+

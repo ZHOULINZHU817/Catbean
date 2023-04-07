@@ -19,16 +19,16 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.orderSn" class="input-width" placeholder="订单编号"></el-input>
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="输入搜索：" prop="memberPhone">
+            <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
           </el-form-item>
-          <el-form-item label="提交时间：">
+          <el-form-item label="时间：">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
-              value-format="yyyy-MM-dd"
-              type="daterange"
+              value-format="timestamp"
+              type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -59,6 +59,7 @@
             :buttonCellWidth="200"
             :total="total"
             :rowEdit="true"
+            :height="'400'"
             :highlightCurrentRow="true"
             :buttons="mainButtons"
             @doubleClick="doubleClick"
@@ -96,6 +97,10 @@
   import CustomTable from "@/components/CustomTable/index.vue"
   import CustomForm from "@/components/CustomForm/indexNew.vue"
   import { orderTabHead } from "./table.js";
+  import {
+   productOrderList,
+   productOrderSend
+  } from "@/api/catApi/goodsApi";
   export default {
     name: "orderList",
     components:{
@@ -105,66 +110,60 @@
     data() {
       return {
         // 主表默认配置
-        viewTableData: [{oderCode:'13123131232'}],
+        viewTableData: [],
         orderTabHead: orderTabHead, //主表表头
         total: 0,//主表数据长度
-        currentSize: 10,//主表分页size
-        currentPage: 1,//主表分页page
-        listQuery: {},
+        currentSize: 5,//主表分页size
+        currentPage: 0,//主表分页page
+        listQuery: {
+          page: 0,
+          size: 5,
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+        },
         mainButtons:{
             list:[
                 {
-                    label: "编辑",
+                    label: "发货",
                     type: "text",
                     size: "mini",
                     method: "edit",
                     if: () => {
                     return true;
                     },
-                },
-                {
-                    label: "删除",
-                    type: "text",
-                    size: "mini",
-                    method: "delete",
-                    class: "delete",
-                    if: () => {
-                    return true;
-                    },
-                },
+                }
             ],
         },
         dialogVisible: false,
         rules: {
-            odercode: [{
+            logisticsNo: [{
                 required: true,
                 message: '请输入快递单号',
                 trigger: 'blur'
             }]
         },
         formInfo: {
-            odercode:'99999988'
+            logisticsNo:''
         },
         fields: [
             {
-                keyName: 'odercode',
+                keyName: 'logisticsNo',
                 label: '快递单号',
                 type: 'input',
                 maxlength: 20,
                 formMaxWidth: 14,
             },
-            {
-                keyName: 'versionNum',
-                label: '订单状态',
-                type: 'switch',
-                maxlength: 20,
-                formMaxWidth: 14,
-            },
+            // {
+            //     keyName: 'versionNum',
+            //     label: '订单状态',
+            //     type: 'switch',
+            //     maxlength: 20,
+            //     formMaxWidth: 14,
+            // },
         ]
       }
     },
     created() {
-      
+      this.getProductOrderList();
     },
     methods: {
       doubleClick(){
@@ -176,13 +175,22 @@
       getSelection(){
 
       },
-      sizeChange() {
-
+      sizeChange(val) {
+        this.currentSize = val
+        this.listQuery.size = this.currentSize
+        this.getProductOrderList()
       },
-      currentChange() {
-
+      currentChange(val) {
+        this.currentPage = val
+        this.listQuery.page = this.currentPage-1
+        this.getProductOrderList()
+      },
+      handleResetSize() {
+        this.currentPage = 0
+        this.listQuery.page = this.currentPage;
       },
       handleOperation(params) {
+        this.row = params.row;
         switch(params.method){
             case 'edit':
                 this.dialogVisible = true;
@@ -190,18 +198,60 @@
         }
         console.log('params', params)
       },
-      handleAddShop() {
-         this.$router.push(
-           { 
-                path:'/shopManagement/shop/add',
-                query:{
-                    id:''
-                }
-            }
-        );
-      },
+      // handleAddShop() {
+      //    this.$router.push(
+      //      { 
+      //           path:'/shopManagement/shop/add',
+      //           query:{
+      //               id:''
+      //           }
+      //       }
+      //   );
+      // },
       handleConfirm(){
-
+        this.$refs["subForm"].validate("", (boolean) => {
+          if (boolean) {
+            let params = {
+              id:this.row.id,
+              ...this.formInfo
+            }
+            productOrderSend(params).then(res=>{
+              if(res.code == '200'){
+                this.$message({
+                  message: '发货成功！',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.dialogVisible = false;
+                this.getProductOrderList();
+              }
+            })
+          }
+        })
+      },
+      handleSearchList(){
+        this.handleResetSize();
+        this.getProductOrderList()
+      },
+      handleResetSearch(){
+        this.$refs['listQuery'].resetFields();
+      },
+      //列表
+      getProductOrderList(){
+        let params = {
+            begin: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[0],
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            memberPhone: this.listQuery.memberPhone,
+        }
+        productOrderList(params).then(res=>{
+          if(res.code == '200'){
+            let { records, total} = res.data;
+            this.viewTableData = records || [];
+            this.total = total
+           }
+        })
       }
     }
   }

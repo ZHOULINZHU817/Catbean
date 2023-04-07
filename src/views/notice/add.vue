@@ -2,8 +2,8 @@
   <div style="margin-top: 50px">
     <el-form :model="form" :rules="rules" ref="newsDetail" label-width="120px" class="form-inner-container" size="small">
       
-      <el-form-item label="标题：" prop="name">
-        <el-input v-model="form.name"></el-input>
+      <el-form-item label="标题：" prop="title">
+        <el-input v-model="form.title"></el-input>
       </el-form-item>
        <el-form-item label="链接：" prop="link">
         <el-input v-model="form.link"></el-input>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import {noticeAdd, noticeEdit} from "@/api/catApi/noticeApi"
+  import {noticeAdd, noticeEdit, noticeDetail} from "@/api/catApi/noticeApi"
   export default {
     name: "newsDetail",
     components: {
@@ -35,7 +35,7 @@
             
         },
         rules: {
-          name: [
+          title: [
             {required: true, message: '请输入公告标题名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
@@ -88,11 +88,11 @@
       },
       /***查询详情的接口* */
       noticeDetail(){
-        // noticeDetail().then(res=>{
-        //   if(res.code == '200'){
-        //     this.form = res.data;
-        //   }
-        // })
+        noticeDetail(this.id).then(res=>{
+          if(res.code == '200'){
+            this.form = res.data;
+          }
+        })
       }
     }
   }

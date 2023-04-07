@@ -1,167 +1,140 @@
 {
     "code": 200,
-    "message": "操作成功",
+    "msg": "请求成功",
     "data": {
-        "roles": [
-            "超级管理员"
-        ],
-        "icon": "http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/timg.jpg",
-        "menus": [
+        "id": 1,
+        "phone": "15618243416",
+        "permissions": [
             {
                 "id": 1,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
+                "pid": 0,
+                "name": "productManger",
                 "title": "猫超商品管理",
-                "level": 0,
-                "sort": 0,
-                "name": "shopManagement",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
-            },
-            {
-                "id": 2,
-                "parentId": 1,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "商品列表",
-                "level": 0,
-                "sort": 0,
-                "name": "shop",
-                "icon": "product",
-                "hidden": 0
+                "sort": 1,
+                "createTime": 1680621783000
             },
             {
                 "id": 3,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "抢购订单",
-                "level": 0,
-                "sort": 0,
+                "pid": 0,
                 "name": "saleOrder",
+                "title": "抢购订单",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 3,
+                "createTime": 1680621975000
             },
             {
                 "id": 4,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
+                "pid": 0,
+                "name": "mallOrder",
                 "title": "猫超订单管理",
-                "level": 0,
-                "sort": 0,
-                "name": "orderManagement",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 4,
+                "createTime": 1680622017000
             },
             {
                 "id": 5,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
+                "pid": 0,
+                "name": "banner",
                 "title": "首页轮播图管理",
-                "level": 0,
-                "sort": 0,
-                "name": "orderManagement",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 5,
+                "createTime": 1680622060000
             },
             {
                 "id": 6,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "首页轮播图管理",
-                "level": 0,
-                "sort": 0,
-                "name": "banner",
+                "pid": 0,
+                "name": "member",
+                "title": "会员列表",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 6,
+                "createTime": 1680622125000
             },
             {
                 "id": 7,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "会员列表",
-                "level": 0,
-                "sort": 0,
-                "name": "member",
+                "pid": 0,
+                "name": "recharge",
+                "title": "猫豆充值",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 7,
+                "createTime": 1680622158000
             },
             {
                 "id": 8,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "猫豆充值",
-                "level": 0,
-                "sort": 0,
-                "name": "recharge",
+                "pid": 0,
+                "name": "withdraw",
+                "title": "猫豆提现审核",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 8,
+                "createTime": 1680622180000
             },
             {
                 "id": 9,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "猫豆提现审核",
-                "level": 0,
-                "sort": 0,
-                "name": "withdraw",
+                "pid": 0,
+                "name": "version",
+                "title": "APP版本号管理",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 9,
+                "createTime": 1680622207000
             },
             {
                 "id": 10,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "APP版本号管理",
-                "level": 0,
-                "sort": 0,
-                "name": "version",
+                "pid": 0,
+                "name": "permission",
+                "title": "权限管理",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 10,
+                "createTime": 1680622231000
             },
             {
                 "id": 11,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "权限管理",
-                "level": 0,
-                "sort": 0,
-                "name": "permission",
+                "pid": 0,
+                "name": "notice",
+                "title": "公告消息",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 11,
+                "createTime": 1680622254000
             },
             {
                 "id": 12,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "公告消息",
-                "level": 0,
-                "sort": 0,
-                "name": "notice",
+                "pid": 0,
+                "name": "callCenter",
+                "title": "客服管理",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 12,
+                "createTime": 1680622302000
             },
             {
                 "id": 13,
-                "parentId": 12,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "消息列表",
-                "level": 0,
-                "sort": 0,
-                "name": "news",
+                "pid": 0,
+                "name": "goodsAdded",
+                "title": "抢购商品上架",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 13,
+                "createTime": 1680622302000
             },
             {
                 "id": 14,
-                "parentId": 0,
-                "createTime": "2020-02-02T06:50:36.000+00:00",
-                "title": "客服管理",
-                "level": 0,
-                "sort": 0,
-                "name": "callCenter",
+                "pid": 0,
+                "name": "rewardsApportion",
+                "title": "抢购奖励分配",
+                "type": "menu",
                 "icon": "product",
-                "hidden": 0
+                "sort": 14,
+                "createTime": 1680622302000
             }
-        ],
-        "username": "admin"
+        ]
     }
 }
