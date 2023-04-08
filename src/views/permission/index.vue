@@ -157,13 +157,13 @@
         :form="form"
         :fields="fields"
         :form-ref="'subForm'"
-        style="margin-bottom: 20px;padding-right:30px"
+        style="margin-bottom: 20px;padding-right:30px;padding-bottom: 100px;"
         :labelWidth="'80px'"
         :formMaxWidth="'dept'"
         class="shopCar"
     />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="menuPermissionVisible = false">取 消</el-button>
+        <el-button @click="menuPermissionVisible=false">取 消</el-button>
         <el-button type="primary" @click="handleConfirm">确 定</el-button>
       </span>
     </el-dialog>
