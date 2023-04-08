@@ -248,7 +248,7 @@
         productOrderList(params).then(res=>{
           if(res.code == '200'){
             let { records, total} = res.data;
-            this.viewTableData = records || [];
+            this.viewTableData = records || [];//[{name:'name'}]//
             this.total = total
            }
         })

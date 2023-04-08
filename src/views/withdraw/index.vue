@@ -285,7 +285,7 @@ export default {
       withdrawList(params).then((res) => {
         if (res.code == "200") {
           let { records, total } = res.data;
-          this.viewTableData = records || [];
+          this.viewTableData = records || [];//[{payeeName:"sadad", id:'123'}]//
           this.total = total;
         }
       });

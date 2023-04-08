@@ -31,11 +31,11 @@ export function productList(params) {
     })
 }
 
-export function productStatus(data) {
+export function productStatus(params) {
     return request({
         url: '/api/sys/product/status', //上架下架商品
         method: 'put',
-        data: data
+        params: params
     })
 }
 

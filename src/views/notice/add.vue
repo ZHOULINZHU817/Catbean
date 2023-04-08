@@ -76,7 +76,7 @@
         })
       },
       getNoticeEdit() {
-         noticeEdit(this.form).then(res=>{
+         noticeEdit(this.id, this.form).then(res=>{
           if(res.code == '200'){
             this.$message({
               message: '修改成功',

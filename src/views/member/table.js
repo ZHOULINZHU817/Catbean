@@ -96,6 +96,30 @@ let memberTabHead = [
       fieldType: "input",
       width: 120,
     },
+    {
+      fieldName: "奖励金",
+      fieldChName: "奖励金",
+      fieldEnName: "buyReword",
+      fieldNo: "buyReword",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "分享值",
+      fieldChName: "分享值",
+      fieldEnName: "teamReward",
+      fieldNo: "teamReward",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "分润",
+      fieldChName: "分润",
+      fieldEnName: "childReward",
+      fieldNo: "childReward",
+      fieldType: "input",
+      width: 120,
+    },
   ]
 
 export { memberTabHead };

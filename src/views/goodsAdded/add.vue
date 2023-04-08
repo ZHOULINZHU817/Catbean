@@ -35,6 +35,7 @@ import {
     saleOrderEdit,
     saleOrder
   } from "@/api/catApi/addedOrderApi";
+  import { formatDate } from "@/utils/date"
   export default {
     name: "addedDetail",
     components: {
@@ -57,10 +58,17 @@ import {
       };
     },
     created() {
-      this.id = this.$route.query.id;
-      if(this.id){
-        // this.productDetail();
-      }
+    //   this.id = this.$route.query.id;
+    //   if(this.id){
+    //     // this.productDetail();
+    //   }
+        let { method, params} = this.$route.query;
+        this.row = JSON.parse(params);
+        this.method = method;
+        if(method == 'edit'){
+            this.form = this.row;
+            this.form.startBuyTime = new Date(new Date(this.form.startBuyTime)).getTime();
+        }
     },
     
     methods: {
@@ -71,8 +79,8 @@ import {
       handleSave(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.id){
-              this.productEdit();
+            if(this.method == 'edit'){
+              this.saleOrderEdit();
             }else{
               this.saleOrder()
             }
@@ -92,21 +100,13 @@ import {
         })
       },
       saleOrderEdit(){
-        saleOrderEdit(this.id, this.form).then(res=>{
+        saleOrderEdit(this.row.id, this.form).then(res=>{
           if(res.code == '200'){
             this.$message({
               message: '修改成功',
               type: 'success',
               duration: 1000
             });
-          }
-        })
-      },
-      productDetail(){
-        productDetail(this.id).then(res=>{
-          if(res.code == '200'){
-            this.form = res.data;
-            this.imagesList = this.form.images;
           }
         })
       }

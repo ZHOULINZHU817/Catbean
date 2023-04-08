@@ -69,7 +69,6 @@
             @sizeChange="sizeChange"
             @currentChange="currentChange"
             @handleOperation="handleOperation"
-            @switchChange="switchChange"
             ></custom-table>
     </div>
   </div>
@@ -167,7 +166,8 @@
             this.$router.push({ 
               path:'/banner/picture/add',
               query:{
-                  id: param.row.id
+                  params: JSON.stringify(param.row),
+                  method:'edit'
               }
             });
             break;

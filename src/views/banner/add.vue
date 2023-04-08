@@ -2,7 +2,7 @@
   <div style="padding: 30px">
     <el-form :model="form" :rules="rules" style="width: 660px" label-width="120px">
       <el-form-item label="首页轮播图：">
-        <multi-upload v-model="selectProductPics"></multi-upload>
+        <multi-upload v-model="selectProductPics" :maxCount="1"></multi-upload>
       </el-form-item>
       <el-form-item label="图片标题：" prop="title">
         <el-input v-model="form.title"></el-input>
@@ -10,8 +10,8 @@
       <el-form-item label="图片上架：">
         <el-switch
           v-model="form.offline"
-          :active-value="'true'"
-          :inactive-value="'false'"
+          :active-value="true"
+          :inactive-value="false"
         >
         </el-switch>
       </el-form-item>
@@ -35,22 +35,25 @@ export default {
     return {
       selectProductPics: [],
       form:{
-
       },
       rules: {}
     };
   },
   mounted() {
-    this.id = this.$route.query.id;
-      if(this.id){
-        this.bannerDetail();
+    let { method, params} = this.$route.query;
+    this.row = JSON.parse(params);
+    this.method = method;
+    if(method == 'edit'){
+       this.form = this.row;
+       this.form.offline = this.form.offline == '已上架'? true : false;
+       this.selectProductPics.push(this.form.image)
     }
   },
   methods: {
     /***图片保存* */
     handleSavePic() {
         this.form.image = this.selectProductPics[0];
-        if(this.id){
+        if(this.method == 'edit'){
             this.bannerEdit();
         }else{
             this.bannerAdd()
@@ -70,7 +73,7 @@ export default {
         });
     },
     bannerEdit(){
-        bannerEdit().then(res=>{
+        bannerEdit(this.row).then(res=>{
             if (res.code == "200") {
                 this.$message({
                     message: "修改成功",
@@ -79,15 +82,7 @@ export default {
                 });
             }
         })
-    },
-    bannerDetail() {
-    //   bannerList({ page: 0, size: 100 }).then((res) => {
-    //     if (res.code == "200") {
-    //       let { records } = res.data;
-    //       this.selectProductPics = records || [];
-    //     }
-    //   });
-    },
+    }
   },
 };
 </script>

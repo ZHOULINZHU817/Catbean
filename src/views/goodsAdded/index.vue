@@ -87,15 +87,14 @@
     data() {
       return {
         // 主表默认配置
-        viewTableData: [],
+        viewTableData: [], //{price: 1, startBuyTime:"2023-04-07 12:23:26",type:"twelve", id:'1'}
         addedTabHead: addedTabHead, //主表表头
         total: 0,//主表数据长度
         currentSize: 5,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
-          size: 5,
-          status:"allocated"
+          size: 5
         },
         mainButtons:{
             list:[
@@ -132,9 +131,9 @@
            if(res.code == '200'){
             let { records, total} = res.data;
             this.viewTableData = records || [];
-            this.viewTableData.map(item=>{
-            //   item.state = item.status == 'online'? true: false;
-            })
+            // this.viewTableData.map(item=>{
+            // //   item.state = item.status == 'online'? true: false;
+            // })
             this.total = total
            }
         })
@@ -168,7 +167,8 @@
             this.$router.push({ 
               path:'/goodsAdded/added/edit',
               query:{
-                  id: param.row.id
+                  params: JSON.stringify(param.row),
+                  method:'edit'
               }
             });
             break;

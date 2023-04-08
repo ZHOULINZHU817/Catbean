@@ -23,9 +23,9 @@ export function noticeList(params) {
     })
 }
 
-export function noticeEdit(data) {
+export function noticeEdit(id, data) {
     return request({
-        url: '/api/sys/notice', //修改公告
+        url: '/api/sys/notice/'+ id, //修改公告
         method: 'put',
         data: data
     })

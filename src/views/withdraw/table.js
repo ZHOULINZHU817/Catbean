@@ -33,13 +33,37 @@ let withdrawTabHead = [
       width: 120,
     },
     {
-      fieldName: "提现方式(支付宝/微信/银行卡)",
-      fieldChName: "提现方式(支付宝/微信/银行卡)",
+      fieldName: "手续费",
+      fieldChName: "手续费",
+      fieldEnName: "fee",
+      fieldNo: "fee",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "提现方式",
+      fieldChName: "提现方式",
       fieldEnName: "payType",
       fieldNo: "payType",
       fieldType: "input",
       width: 180,
+    },
+    {
+      fieldName: "驳回原因",
+      fieldChName: "驳回原因",
+      fieldEnName: "reason",
+      fieldNo: "reason",
+      fieldType: "input",
+      width: 180,
     }, 
+    {
+      fieldName: "状态",
+      fieldChName: "状态",
+      fieldEnName: "state",
+      fieldNo: "state",
+      fieldType: "input",
+      width: 120,
+    },
   ]
 
 export { withdrawTabHead };

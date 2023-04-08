@@ -64,6 +64,14 @@ let orderTabHead = [
       fieldType: "input",
       width: 120,
     },
+    {
+      fieldName: "付款时间",
+      fieldChName: "付款时间",
+      fieldEnName: "state",
+      fieldNo: "state",
+      fieldType: "input",
+      width: 120,
+    },
   ]
 
 export { orderTabHead };
