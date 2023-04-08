@@ -23,7 +23,20 @@ export function saleOrderList(params) {
         params: params
     })
 }
-
+export function recordBuyList(params) {
+    return request({
+        url: '/api/sys/record/buy/list', //获取抢购商品记录
+        method: 'get',
+        params: params
+    })
+}
+export function reserveList(params) {
+    return request({
+        url: '/api/sys/record/reserve/list', //获取抢购预约记录
+        method: 'get',
+        params: params
+    })
+}
 
 
 

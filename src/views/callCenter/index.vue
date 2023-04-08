@@ -2,7 +2,7 @@
     <div style="padding: 30px;">
       <el-form style="width: 660px;"  label-width="120px">
           <el-form-item label="设置客服微信：">
-                <multi-upload v-model="selectProductPics"></multi-upload>
+                <multi-upload v-model="selectProductPics" :maxCount="1"></multi-upload>
           </el-form-item>
           <el-form-item style="text-align: center;padding-top:80px;">
             <el-button type="primary" size="medium" @click="handleSavePic">保存</el-button>
@@ -12,23 +12,55 @@
 </template>
 <script>
 import MultiUpload from '@/components/Upload/multiUpload'
+import { callSetting, callSettingList } from "@/api/catApi/setApi"
 export default {
-    name:'recharge',
+    name:'callCenter',
     components: {
         MultiUpload
     },
     data() {
         return {
-            selectProductPics: ['http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg']
+            selectProductPics: []
         }
     },
     mounted() {
-       
+       this.callSettingList();
     },
     methods: {
         /***图片保存* */
         handleSavePic() {
-            console.log('+++', this.selectProductPics)
+            if(!this.selectProductPics.length){
+                return;
+            }
+            let params= {
+                list:[
+                    {
+                        description:'客服',
+                        name:'customer_service',
+                        value: this.selectProductPics && this.selectProductPics[0] 
+                    }
+                ]
+            }
+            callSetting(params).then(res=>{
+                if(res.code == '200'){
+                    this.$message({
+                        message: '保存成功',
+                        type: 'success',
+                        duration: 1000
+                    });
+                }
+            })
+        },
+        callSettingList(){
+            callSettingList().then(res=>{
+                if(res.code == '200'){
+                    res.data.map(item=>{
+                        if(item.name == 'customer_service'){
+                            this.selectProductPics.push(item.value);
+                        }
+                    })
+                }
+            })
         }
     }
 }

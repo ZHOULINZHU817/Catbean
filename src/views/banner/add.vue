@@ -73,7 +73,8 @@ export default {
         });
     },
     bannerEdit(){
-        bannerEdit(this.row).then(res=>{
+        delete this.form.$index
+        bannerEdit(this.form).then(res=>{
             if (res.code == "200") {
                 this.$message({
                     message: "修改成功",

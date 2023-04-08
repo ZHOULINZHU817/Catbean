@@ -1,6 +1,6 @@
 <template> 
   <div class="app-container">
-    <el-card class="filter-container" shadow="never">
+    <!-- <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
@@ -37,7 +37,7 @@
           </el-form-item>
         </el-form>
       </div>
-    </el-card>
+    </el-card> -->
     <!-- <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
@@ -53,11 +53,10 @@
             :tableHead="rewardsTabHead"
             :isShowSelection="true"
             :sortable="true"
-            :isShowPage="true"
+            :isShowPage="false"
             :currentSize="currentSize"
             :currentPage="currentPage"
             :buttonCellWidth="200"
-            :height="'400'"
             :total="total"
             :rowEdit="true"
             :highlightCurrentRow="true"
@@ -75,7 +74,7 @@
 <script>
   import CustomTable from "@/components/CustomTable/index.vue"
   import { rewardsTabHead } from "./table.js";
-  import { memberList, managerFrozen } from "@/api/catApi/memberApi"
+  import { teamList } from "@/api/catApi/setApi"
   export default {
     name: "rewardsList",
     components:{
@@ -97,38 +96,20 @@
         mainButtons:{
             list:[
                 {
-                    label: "解封",
+                    label: "编辑",
                     type: "text",
                     size: "mini",
                     method: "edit",
                     if: (param) => {
-                      if(param.state == '冻结'){
-                        return true;
-                      }else{
-                        return false;
-                      }
+                      return true;
                     },
-                },
-                {
-                    label: "冻结",
-                    type: "text",
-                    size: "mini",
-                    method: "delete",
-                    class: "edit",
-                    if: (param) => {
-                       if(param.state == '正常'){
-                          return true;
-                        }else{
-                          return false;
-                        }
-                    },
-                },
+                }
             ],
         },
       }
     },
     created() {
-      this.getMemberList();
+      this.teamList();
     },
     methods: {
       doubleClick(){
@@ -143,12 +124,12 @@
       sizeChange(val) {
         this.currentSize = val
         this.listQuery.size = this.currentSize
-        this.getMemberList()
+        this.teamList()
       },
       currentChange(val) {
         this.currentPage = val
         this.listQuery.page = this.currentPage-1
-        this.getMemberList()
+        this.teamList()
       },
       handleResetSize() {
         this.currentPage = 0
@@ -157,57 +138,31 @@
       handleOperation(params) {
         switch(params.method){
             case 'edit': //冻结
-              this.getData(params.row, 1)   
-            break;
-            case 'delete': //解封
-              this.getData(params.row, 2)   
-            break;
+              this.$router.push({ 
+                path:'/rewardsApportion/apportion/edit',
+                query:{
+                    params: JSON.stringify(params.row),
+                    method:'edit'
+                }
+              });
+              break;
         }
       },
-      getData(params, val) {
-        let content = val == 1?'确认要解封该会员吗？': '确认要冻结该会员吗？';
-        this.$confirm(content, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            let data = {
-              phone: params.phone,
-              frozen: val == 1? false : true
-            }
-            managerFrozen(data).then(res=>{
-              if(res.code == '200'){
-                this.$message({
-                  message: '拒绝提现成功！',
-                  type: 'success',
-                  duration: 1000
-                });
-              }
-            })
-        })
-      },
-      getMemberList(){
-        let params = {
-            begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
-            page: this.listQuery.page,
-            size: this.listQuery.size,
-            memberPhone: this.listQuery.memberPhone,
-        }
-        memberList(params).then(res=>{
+      teamList(){
+        teamList().then(res=>{
           if(res.code == '200'){
-            let { records, total} = res.data; 
-            this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
-            this.viewTableData.map(item=>{
-              item.state = item.status ? '正常':'冻结';
-            })
-            this.total = total
+            // let { records, total} = res.data; 
+            this.viewTableData = res.data || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
+            // this.viewTableData.map(item=>{
+            //   item.state = item.status ? '正常':'冻结';
+            // })
+            // this.total = total
            }
         })
       },
       handleSearchList(){
         this.handleResetSize();
-        this.getMemberList()
+        this.teamList()
       },
       handleResetSearch(){
         this.$refs['listQuery'].resetFields();

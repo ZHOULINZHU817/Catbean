@@ -100,6 +100,7 @@ import {
         })
       },
       saleOrderEdit(){
+        delete this.form.$index
         saleOrderEdit(this.row.id, this.form).then(res=>{
           if(res.code == '200'){
             this.$message({

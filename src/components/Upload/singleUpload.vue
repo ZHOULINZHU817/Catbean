@@ -3,45 +3,56 @@
     <el-upload
       :action="useOss?ossUploadUrl:minioUploadUrl"
       :data="useOss?dataObj:null"
-      list-type="picture"
-      :multiple="false" :show-file-list="showFileList"
+      :headers="headers"
       :file-list="fileList"
+      :multiple="false" 
+      :show-file-list="showFileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
+      :limit="maxCount"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
+      <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div> -->
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="fileList[0].url" alt="">
+      <!-- <img width="100%" :src="fileList[0].url" alt=""> -->
     </el-dialog>
   </div>
 </template>
 <script>
   import {policy} from '@/api/oss'
-
+  import { getToken } from '@/utils/auth'
   export default {
     name: 'singleUpload',
     props: {
-      value: String
+      // value: String
+      value: Array,
+      maxCount: 2,
     },
     computed: {
-      imageUrl() {
-        return this.value;
-      },
-      imageName() {
-        if (this.value != null && this.value !== '') {
-          return this.value.substr(this.value.lastIndexOf("/") + 1);
-        } else {
-          return null;
-        }
-      },
+      // imageUrl() {
+      //   return this.value;
+      // },
+      // imageName() {
+      //   if (this.value != null && this.value !== '') {
+      //     return this.value.substr(this.value.lastIndexOf("/") + 1);
+      //   } else {
+      //     return null;
+      //   }
+      // },
+      // fileList() {
+      //   return [{
+      //     name: this.imageName,
+      //     url: this.imageUrl
+      //   }]
+      // },
       fileList() {
-        return [{
-          name: this.imageName,
-          url: this.imageUrl
-        }]
+        let fileList=[];
+        for(let i=0;i<this.value.length;i++){
+          fileList.push({name:this.value[i].name, url:this.value[i]});
+        }
+        return fileList;
       },
       showFileList: {
         get: function () {
@@ -62,16 +73,23 @@
           host: '',
           // callback:'',
         },
+        headers: {
+          token: getToken()
+        },
         dialogVisible: false,
         useOss:false, //使用oss->true;使用MinIO->false
         ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
         // minioUploadUrl:'https://admin-api.macrozheng.com/minio/upload',
-         minioUploadUrl: 'https://mc.hongfeigg.com/api/common/upload/image'
+         minioUploadUrl: 'https://mc.hongfeigg.com/api/common/upload/pkg'
       };
     },
     methods: {
       emitInput(val) {
-        this.$emit('input', val)
+        let value=[];
+        for(let i=0;i<val.length;i++){
+          value.push({url: val[i].url, name: val[i].name});
+        }
+        this.$emit('input', value)
       },
       handleRemove(file, fileList) {
         this.emitInput('');
@@ -103,14 +121,15 @@
       },
       handleUploadSuccess(res, file) {
         this.showFileList = true;
-        this.fileList.pop();
+        // this.fileList.pop();
         let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
         if(!this.useOss){
           //不使用oss直接获取图片路径
-          url = res.data.url;
+          url = res.data;
         }
         this.fileList.push({name: file.name, url: url});
-        this.emitInput(this.fileList[0].url);
+        // this.emitInput(this.fileList[0].url);
+        this.emitInput(this.fileList);
       }
     }
   }

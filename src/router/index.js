@@ -510,7 +510,7 @@ export const asyncRouterMap = [
   {
     path:'/rewardsApportion',
     component: Layout,
-    redirect: '/rewards/apportion',
+    redirect: '/rewardsApportion/apportion',
     name: 'rewardsApportion',
     meta: {title: '团队设置', icon: 'ums'},
     children: [
@@ -519,6 +519,13 @@ export const asyncRouterMap = [
         name: 'apportion',
         component: () => import('@/views/rewardsApportion/index'),
         meta: {title: '团队设置', icon: 'ums-admin'}
+      },
+      {
+        path: 'apportion/edit',
+        name: 'apportionEdit',
+        component: () => import('@/views/rewardsApportion/add'),
+        meta: {title: '团队设置编辑', icon: 'ums-admin'},
+        hidden: true
       },
     ]
   },
@@ -534,6 +541,13 @@ export const asyncRouterMap = [
         name: 'management',
         component: () => import('@/views/version/index'),
         meta: {title: 'APP版本号管理', icon: 'ums-admin'}
+      },
+      {
+        path: 'management/add',
+        name: 'managementAdd',
+        component: () => import('@/views/version/add'),
+        meta: {title: 'APP版本号发布', icon: 'product-add'},
+        hidden: true
       },
     ]
   },

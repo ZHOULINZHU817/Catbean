@@ -19,16 +19,16 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.orderSn" class="input-width" placeholder="订单编号"></el-input>
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="输入搜索：" prop="memberPhone">
+            <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
           </el-form-item>
-          <el-form-item label="提交时间：">
+          <el-form-item label="时间：">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
-              value-format="yyyy-MM-dd"
-              type="daterange"
+              value-format="timestamp"
+              type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -39,7 +39,7 @@
       </div>
     </el-card>
     <div class="table-container">
-        <el-tabs type="border-card" v-model="activeName">
+        <el-tabs type="border-card" v-model="activeName"  @tab-click="handleTabClick">
             <el-tab-pane label="已预约" name="appointment">
                 <custom-table
                     :tableData="viewTableData"
@@ -51,7 +51,8 @@
                     :currentPage="currentPage"
                     :buttonCellWidth="200"
                     :total="total"
-                    :rowEdit="true"
+                    :rowEdit="false"
+                    :height="'400'"
                     :highlightCurrentRow="true"
                     :buttons="mainButtons"
                     @doubleClick="doubleClick"
@@ -73,7 +74,8 @@
                     :currentPage="currentPage"
                     :buttonCellWidth="200"
                     :total="total"
-                    :rowEdit="true"
+                    :rowEdit="false"
+                    :height="'400'"
                     :highlightCurrentRow="true"
                     :buttons="mainButtons"
                     @doubleClick="doubleClick"
@@ -95,7 +97,8 @@
                     :currentPage="currentPage"
                     :buttonCellWidth="200"
                     :total="total"
-                    :rowEdit="true"
+                    :rowEdit="false"
+                    :height="'400'"
                     :highlightCurrentRow="true"
                     :buttons="mainButtons"
                     @doubleClick="doubleClick"
@@ -117,7 +120,8 @@
                     :currentPage="currentPage"
                     :buttonCellWidth="200"
                     :total="total"
-                    :rowEdit="true"
+                    :rowEdit="false"
+                    :height="'400'"
                     :highlightCurrentRow="true"
                     :buttons="mainButtons"
                     @doubleClick="doubleClick"
@@ -139,7 +143,8 @@
                     :currentPage="currentPage"
                     :buttonCellWidth="200"
                     :total="total"
-                    :rowEdit="true"
+                    :rowEdit="false"
+                    :height="'400'"
                     :highlightCurrentRow="true"
                     :buttons="mainButtons"
                     @doubleClick="doubleClick"
@@ -157,80 +162,57 @@
 <script>
   import CustomTable from "@/components/CustomTable/index.vue"
   import { appointmentTabHead, specialOfferTabHead, resaleTabHead, breakPromiseTabHead, finishTabHead } from "./table.js";
+  import { recordBuyList, reserveList } from "@/api/catApi/addedOrderApi";
+  let typeList = {
+    twelve:'12：00场',
+    sixteen:'16：00场',
+    twenty:'20：00场'
+  }
+  let statusList = {
+
+  }
   export default {
-    name: "orderList",
+    name: "saleOrderList",
     components:{
         CustomTable
     },
     data() {
       return {
         // 主表默认配置
-        viewTableData: [{oderCode:'13123131232'}],
+        viewTableData: [],
         appointmentTabHead: appointmentTabHead, //主表表头
         specialOfferTabHead: specialOfferTabHead,
         resaleTabHead: resaleTabHead,
         breakPromiseTabHead: breakPromiseTabHead,
         finishTabHead: finishTabHead,
         total: 0,//主表数据长度
-        currentSize: 10,//主表分页size
-        currentPage: 1,//主表分页page
-        listQuery: {},
+        currentSize: 5,//主表分页size
+        currentPage: 0,//主表分页page
+        listQuery: {
+          page: 0,
+          size: 5,
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+        },
         mainButtons:{
             list:[
-            {
-                label: "删除",
-                type: "text",
-                size: "mini",
-                method: "copy",
-                if: () => {
-                return true;
-                },
-            },
+            // {
+            //     label: "删除",
+            //     type: "text",
+            //     size: "mini",
+            //     method: "copy",
+            //     if: () => {
+            //     return true;
+            //     },
+            // },
             ],
         },
-        activeName:'appointment'
+        activeName:'appointment',
+
       }
     },
     created() {
-      
+      this.reserveList();
     },
-    // filters: {
-    //   formatCreateTime(time) {
-    //     let date = new Date(time);
-    //     return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-    //   },
-    //   formatPayType(value) {
-    //     if (value === 1) {
-    //       return '支付宝';
-    //     } else if (value === 2) {
-    //       return '微信';
-    //     } else {
-    //       return '未支付';
-    //     }
-    //   },
-    //   formatSourceType(value) {
-    //     if (value === 1) {
-    //       return 'APP订单';
-    //     } else {
-    //       return 'PC订单';
-    //     }
-    //   },
-    //   formatStatus(value) {
-    //     if (value === 1) {
-    //       return '待发货';
-    //     } else if (value === 2) {
-    //       return '已发货';
-    //     } else if (value === 3) {
-    //       return '已完成';
-    //     } else if (value === 4) {
-    //       return '已关闭';
-    //     } else if (value === 5) {
-    //       return '无效订单';
-    //     } else {
-    //       return '待付款';
-    //     }
-    //   },
-    // },
     methods: {
       doubleClick(){
 
@@ -241,14 +223,115 @@
       getSelection(){
 
       },
-      sizeChange() {
-
+      sizeChange(val) {
+        this.currentSize = val
+        this.listQuery.size = this.currentSize
+        if(this.activeName == 'appointment'){
+          this.reserveList();
+        }else{
+          this.recordBuyList();
+        }
       },
-      currentChange() {
-
+      currentChange(val) {
+        this.currentPage = val
+        this.listQuery.page = this.currentPage-1
+        if(this.activeName == 'appointment'){
+          this.reserveList();
+        }else{
+          this.recordBuyList();
+        }
+      },
+      handleResetSize() {
+        this.currentPage = 0
+        this.listQuery.page = this.currentPage;
       },
       handleOperation() {
 
+      },
+      handleSearchList(){
+        this.handleResetSize();
+        if(this.activeName == 'appointment'){
+          this.reserveList();
+        }else{
+          this.recordBuyList();
+        }
+      },
+      handleResetSearch(){
+        this.$refs['listQuery'].resetFields();
+      },
+      handleTabClick(tab) {
+        this.viewTableData = [];
+        this.handleResetSize();
+        this.handleResetSearch();
+        switch(tab.name){
+          case 'appointment': //预约
+            this.reserveList();
+            break;
+          case 'specialOffer': //抢购
+            this.listQuery.status='buying', //reserved, buying, resell, breach, finish
+            this.recordBuyList();
+            break;
+          case 'resale': // 转卖
+            this.listQuery.status='resell', //reserved, buying, resell, breach, finish
+            this.recordBuyList();
+            break;
+          case 'breakPromise': //违约
+            this.listQuery.status='breach', //reserved, buying, resell, breach, finish
+            this.recordBuyList();
+            break;
+          case 'finish': //完成
+            this.listQuery.status='finish', //reserved, buying, resell, breach, finish
+            this.recordBuyList();
+            break;
+        }
+      },
+      /**其他* */
+      recordBuyList() {
+        let params = {
+            begin: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[0],
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            memberPhone: this.listQuery.memberPhone,
+            status: this.listQuery.status, //reserved, buying, resell, breach, finish
+        }
+        recordBuyList(params).then(res=>{
+          if(res.code == '200'){
+            let { records, total} = res.data; 
+            this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
+            this.viewTableData.map(item=>{
+              // item.state = item.status ? '正常':'冻结';
+              item.memberName = item.member && item.member.name ;
+              item.memberPhone = item.member && item.member.phone;
+              item.buyMemberName = item.buyMember && item.buyMember.name ;
+              item.buyMemberPhone = item.buyMember && item.buyMember.phone;
+              item.type = typeList[item.type];
+            })
+            this.total = total
+          }
+        })
+      },
+      /**预约* */
+      reserveList(){
+        let params = {
+            begin: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[0],
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            memberPhone: this.listQuery.memberPhone,
+        }
+        reserveList(params).then(res=>{
+          if(res.code == '200'){
+            let { records, total} = res.data; 
+            this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
+            this.viewTableData.map(item=>{
+              item.state = item.status ? '已预约':'未预约'; //type
+              item.memberName = item.member && item.member.name ;
+              item.memberPhone = item.member && item.member.phone;
+            })
+            this.total = total
+          }
+        })
       }
     }
   }
