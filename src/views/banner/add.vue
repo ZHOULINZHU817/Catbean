@@ -7,7 +7,7 @@
       <el-form-item label="图片标题：" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="图片上架：">
+      <el-form-item label="图片是否下架：">
         <el-switch
           v-model="form.offline"
           :active-value="true"
@@ -45,7 +45,7 @@ export default {
     this.method = method;
     if(method == 'edit'){
        this.form = this.row;
-       this.form.offline = this.form.offline == '已上架'? true : false;
+       this.form.offline = this.form.offline == '已下架'? true : false;
        this.selectProductPics.push(this.form.image)
     }
   },

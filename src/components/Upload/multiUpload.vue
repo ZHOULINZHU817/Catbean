@@ -109,7 +109,6 @@
           //不使用oss直接获取图片路径
           url = res.data[0]//res.data.url;
         }
-        console.log('url+++++', res, file)
         this.fileList.push({name: file.name,url:url});
         this.emitInput(this.fileList);
       },

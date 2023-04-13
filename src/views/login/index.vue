@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <el-card class="login-form-layout">
       <el-form autoComplete="on"
                :model="loginForm"
@@ -46,8 +46,8 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <img :src="login_center_bg" class="login-center-layout">
-    <el-dialog
+    <!-- <img :src="login_center_bg" class="login-center-layout"> -->
+    <!-- <el-dialog
       title="公众号二维码"
       :visible.sync="dialogVisible"
       :show-close="false"
@@ -61,7 +61,7 @@
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogConfirm">确定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -180,5 +180,11 @@
     max-width: 100%;
     max-height: 100%;
     margin-top: 200px;
+  }
+  .content{
+    width:100%;
+    height:100vh;
+    background: url('../../assets/images/beijing.png') 100% no-repeat;
+    background-size:cover;
   }
 </style>

@@ -131,7 +131,7 @@
             this.viewTableData = records || [];
             this.viewTableData.map((item)=>{
                 item.images = item.image;
-                item.offline = item.offline? '已上架':'已下架';
+                item.offline = item.offline? '已下架':'已上架';
             })
             this.total = total
            }
