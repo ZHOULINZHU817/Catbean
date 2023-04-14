@@ -53,7 +53,7 @@
             {label:"IOS",value:'ipa'}
         ],
         form: {
-            url: []
+            url: ""
         },
         rules: {
           number: [

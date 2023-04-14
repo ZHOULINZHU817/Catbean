@@ -26,34 +26,35 @@
   export default {
     name: 'singleUpload',
     props: {
-      // value: String
-      value: Array,
-      maxCount: 2,
+      value: String,
+      // value: Array,
+      // maxCount: 2,
+      maxCount: 1
     },
     computed: {
-      // imageUrl() {
-      //   return this.value;
-      // },
-      // imageName() {
-      //   if (this.value != null && this.value !== '') {
-      //     return this.value.substr(this.value.lastIndexOf("/") + 1);
-      //   } else {
-      //     return null;
-      //   }
-      // },
-      // fileList() {
-      //   return [{
-      //     name: this.imageName,
-      //     url: this.imageUrl
-      //   }]
-      // },
-      fileList() {
-        let fileList=[];
-        for(let i=0;i<this.value.length;i++){
-          fileList.push({name:this.value[i].name, url:this.value[i]});
-        }
-        return fileList;
+      imageUrl() {
+        return this.value;
       },
+      imageName() {
+        if (this.value != null && this.value !== '') {
+          return this.value.substr(this.value.lastIndexOf("/") + 1);
+        } else {
+          return null;
+        }
+      },
+      fileList() {
+        return [{
+          name: this.imageName,
+          url: this.imageUrl
+        }]
+      },
+      // fileList() {
+      //   let fileList=[];
+      //   for(let i=0;i<this.value.length;i++){
+      //     fileList.push({name:this.value[i].name, url:this.value[i]});
+      //   }
+      //   return fileList;
+      // },
       showFileList: {
         get: function () {
           return this.value !== null && this.value !== ''&& this.value!==undefined;
@@ -85,11 +86,12 @@
     },
     methods: {
       emitInput(val) {
-        let value=[];
-        for(let i=0;i<val.length;i++){
-          value.push({url: val[i].url, name: val[i].name});
-        }
-        this.$emit('input', value)
+        // let value=[];
+        // for(let i=0;i<val.length;i++){
+        //   value.push({url: val[i].url, name: val[i].name});
+        // }
+        // this.$emit('input', value)
+        this.$emit('input', val)
       },
       handleRemove(file, fileList) {
         this.emitInput('');
@@ -121,15 +123,16 @@
       },
       handleUploadSuccess(res, file) {
         this.showFileList = true;
-        // this.fileList.pop();
+        this.fileList.pop();
         let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
         if(!this.useOss){
           //不使用oss直接获取图片路径
           url = res.data;
         }
+        console.log("this.fileList[0].url", url)
         this.fileList.push({name: file.name, url: url});
-        // this.emitInput(this.fileList[0].url);
-        this.emitInput(this.fileList);
+        this.emitInput(this.fileList[0].url);
+        // this.emitInput(this.fileList);
       }
     }
   }
