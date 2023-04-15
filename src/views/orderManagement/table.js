@@ -54,7 +54,7 @@ let orderTabHead = [
       fieldEnName: "logisticsNum",
       fieldNo: "logisticsNum",
       fieldType: "input",
-      width: 120,
+      width: 200,
     },    
     {
       fieldName: "订单状态",
