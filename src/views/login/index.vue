@@ -107,7 +107,7 @@
       this.loginForm.username = getCookie("username");
       this.loginForm.password = getCookie("password");
       if(this.loginForm.username === undefined||this.loginForm.username==null||this.loginForm.username===''){
-        this.loginForm.username = 'admin';
+        this.loginForm.username = '';
       }
       if(this.loginForm.password === undefined||this.loginForm.password==null){
         this.loginForm.password = '';
