@@ -103,11 +103,16 @@
     </el-dialog>
     <el-dialog title="提现方式" :visible.sync="dialogVisibleNew" width="50%">
       <div style="display: flex">
-        <div>微信提现:</div>
+        <div>{{payTitle}}:</div>
         <img
-          style="width: 300px; height: 300px; flex: 1"
-          src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg"
+           v-if="payObj.payType == 'wx' || payObj.payType == 'ali'"
+          style="width: 200px; height: 300px;margin-left:100px;"
+          :src="payObj.payUrl || 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg'"
         />
+        <div style="margin-left:30px;" v-if="payObj.payType == 'bank'">
+          <div>{{payObj.member && payObj.member.bank}}</div>
+          <div>{{payObj.member && payObj.member.bankNo}}</div>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleNew = false">取 消</el-button>
@@ -121,6 +126,16 @@ import CustomTable from "@/components/CustomTable/index.vue";
 import CustomForm from "@/components/CustomForm/indexNew.vue";
 import { withdrawTabHead } from "./table.js";
 import { withdrawList, assetAudit } from "@/api/catApi/memberApi";
+let stateList = {
+  reject:"已拒绝",
+  finish:"已完成",
+  audit:"待审核"
+}
+let payTypeList = {
+  wx:"微信提现",
+  ali:"支付宝提现",
+  bank:"银行卡提现"
+}
 export default {
   name: "withdrawList",
   components: {
@@ -151,8 +166,12 @@ export default {
             type: "text",
             size: "mini",
             method: "edit",
-            if: () => {
-              return true;
+            if: (param) => { //audit
+              if(param.state == 'audit'){
+                return true;
+              }else{
+                return false;
+              }
             },
           },
           {
@@ -161,8 +180,12 @@ export default {
             size: "mini",
             method: "delete",
             class: "delete",
-            if: () => {
-              return true;
+            if: (param) => {
+              if(param.state == 'audit'){
+                return true;
+              }else{
+                return false;
+              }
             },
           },
         ],
@@ -190,6 +213,8 @@ export default {
           formMaxWidth: 24,
         },
       ],
+      payTitle:'',
+      payObj: {}
     };
   },
   created() {
@@ -221,9 +246,13 @@ export default {
       this.$refs['listQuery'].resetFields();
     },
     handleOperation(params) {
+      console.log("++++", params.row.member)
       this.row = params.row;
       switch (params.method) {
         case "edit":
+          this.payObj = params.row && params.row;
+          this.payObj.payUrl =  params.row.payType == 'wx' ? this.payObj.member.wechatUrl : this.payObj.member.alipayUrl;
+          this.payTitle =  params.row &&  params.row.payTypes;
           this.dialogVisibleNew = true;
           break;
         case "delete":
@@ -277,7 +306,7 @@ export default {
     getWithdrawList() {
       let params = {
         begin: this.listQuery.createTime[0],
-        end: this.listQuery.createTime[0],
+        end: this.listQuery.createTime[1],
         page: this.listQuery.page,
         size: this.listQuery.size,
         memberPhone: this.listQuery.memberPhone,
@@ -286,7 +315,17 @@ export default {
         if (res.code == "200") {
           let { records, total } = res.data;
           this.viewTableData = records || [];//[{payeeName:"sadad", id:'123'}]//
+          this.viewTableData[2].payType = "bank"
+          this.viewTableData[2].member.bank="掌上银行"
+          this.viewTableData[2].member.bankNo="342321424242242"
+          console.log('this.viewTableData[2].member', this.viewTableData[2].member)
           this.total = total;
+          this.viewTableData.map(item=>{
+            item.memberPhone = item.member && item.member.phone;
+            item.memberName = item.member && item.member.name;
+            item.states = stateList[item.state]
+            item.payTypes = payTypeList[item.payType]
+          })
         }
       });
     },

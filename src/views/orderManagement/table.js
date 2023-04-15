@@ -3,8 +3,8 @@ let orderTabHead = [
     {
       fieldName: "商品ID",
       fieldChName: "商品ID",
-      fieldEnName: "id",
-      fieldNo: "id",
+      fieldEnName: "productId",
+      fieldNo: "productId",
       fieldType: "input",
       width: 120,
     },
@@ -46,7 +46,7 @@ let orderTabHead = [
       fieldEnName: "receiveAddress",
       fieldNo: "receiveAddress",
       fieldType: "input",
-      width: 120,
+      width: 200,
     },
     {
       fieldName: "快递单号",
@@ -67,10 +67,10 @@ let orderTabHead = [
     {
       fieldName: "付款时间",
       fieldChName: "付款时间",
-      fieldEnName: "state",
-      fieldNo: "state",
+      fieldEnName: "paidTime",
+      fieldNo: "paidTime",
       fieldType: "input",
-      width: 120,
+      width: 140,
     },
   ]
 

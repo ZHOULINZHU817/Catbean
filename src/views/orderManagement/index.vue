@@ -101,6 +101,28 @@
    productOrderList,
    productOrderSend
   } from "@/api/catApi/goodsApi";
+  // case 'init':
+  //         stateTip = "待支付";
+  //         break;
+  //       case 'paid':
+  //         stateTip = "已支付";
+  //         break;
+  //       case 'send':
+  //         stateTip = "已发货";
+  //         break;
+  //       case 'finish':
+  //         stateTip = "已完成";
+  //         stateTipColor = "#666666";
+  //         break;
+  //       case 'cancel':
+  //         stateTip = "已取消";
+  let stateList = {
+    init:"待支付",
+    paid:"已支付",
+    send:"已发货",
+    finish:"已完成",
+    cancel:"已取消",
+  }
   export default {
     name: "orderList",
     components:{
@@ -118,7 +140,7 @@
         listQuery: {
           page: 0,
           size: 5,
-          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
         },
         mainButtons:{
             list:[
@@ -240,7 +262,7 @@
       getProductOrderList(){
         let params = {
             begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
@@ -249,6 +271,11 @@
           if(res.code == '200'){
             let { records, total} = res.data;
             this.viewTableData = records || [];//[{name:'name'}]//
+            this.viewTableData.map(item=>{
+              item.productId = item.product && item.product.id;
+              item.name = item.product && item.product.name;
+              item.state = stateList[item.state];
+            })
             this.total = total
            }
         })

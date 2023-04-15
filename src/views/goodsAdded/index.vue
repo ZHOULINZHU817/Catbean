@@ -20,8 +20,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px" @submit.native.prevent>
-          <el-form-item label="输入搜索：" prop="name">
-            <el-input v-model="listQuery.name" class="input-width" placeholder="请输入商品名称" @keyup.enter.native="handleSearchList()"></el-input>
+          <el-form-item label="输入搜索：" prop="type">
+            <el-input v-model="listQuery.type" class="input-width" placeholder="请输入场次" @keyup.enter.native="handleSearchList()"></el-input>
           </el-form-item>
           <!-- <el-form-item label="提交时间：">
             <el-date-picker
@@ -79,6 +79,19 @@
   } from "@/api/catApi/addedOrderApi";
   import CustomTable from "@/components/CustomTable/index.vue"
   import { addedTabHead } from "./table.js";
+  let typeList = {
+    twelve:'12：00场',
+    sixteen:'16：00场',
+    twenty:'20：00场'
+  }
+
+  let statusList = {
+    un_allocate:'待分配',
+    allocated:'已分配',
+    miss:'已流拍',
+    breach:'已违约',
+    finish:'已完成'
+  }
   export default {
     name: "addedList",
     components:{
@@ -131,9 +144,10 @@
            if(res.code == '200'){
             let { records, total} = res.data;
             this.viewTableData = records || [];
-            // this.viewTableData.map(item=>{
-            // //   item.state = item.status == 'online'? true: false;
-            // })
+            this.viewTableData.map(item=>{
+              item.type = typeList[item.type];
+              item.state = statusList[item.status];
+            })
             this.total = total
            }
         })

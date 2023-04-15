@@ -93,7 +93,7 @@
         listQuery: {
           page: 0,
           size: 5,
-          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
         },
         mainButtons:{
             list:[
@@ -128,7 +128,7 @@
       rechargeList(){
         let params = {
             begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,

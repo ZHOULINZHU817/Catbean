@@ -18,7 +18,7 @@
             class="input-width"
             v-model="form.startBuyTime"
             value-format="timestamp"
-            type="datetime"
+            type="date"
             placeholder="请选择时间">
         </el-date-picker>
       </el-form-item>
@@ -63,7 +63,7 @@ import {
     //     // this.productDetail();
     //   }
         let { method, params} = this.$route.query;
-        this.row = JSON.parse(params);
+        this.row = params && JSON.parse(params);
         this.method = method;
         if(method == 'edit'){
             this.form = this.row;

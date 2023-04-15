@@ -168,8 +168,18 @@
     sixteen:'16：00场',
     twenty:'20：00场'
   }
+  
+  let typeList2 = {
+    no_begin:'未分配',
+    no_win:'未中奖',
+    winning:'已中奖',
+  }
   let statusList = {
-
+    buying:"已抢中",
+    paid:"已支付",
+    resell:"转卖中",
+    breach:"已违约",
+    finish:"已完成",
   }
   export default {
     name: "saleOrderList",
@@ -191,7 +201,7 @@
         listQuery: {
           page: 0,
           size: 5,
-          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
         },
         mainButtons:{
             list:[
@@ -289,7 +299,7 @@
       recordBuyList() {
         let params = {
             begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
@@ -301,11 +311,17 @@
             this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
             this.viewTableData.map(item=>{
               // item.state = item.status ? '正常':'冻结';
+              item.type =  item.saleOrder && typeList[item.saleOrder.type]
+              item.state = statusList[item.status]
               item.memberName = item.member && item.member.name ;
               item.memberPhone = item.member && item.member.phone;
-              item.buyMemberName = item.buyMember && item.buyMember.name ;
-              item.buyMemberPhone = item.buyMember && item.buyMember.phone;
-              item.type = typeList[item.type];
+              item.buyMemberName = item.saleOrder && item.saleOrder.member &&  item.saleOrder.member.name;
+              item.buyMemberPhone = item.saleOrder  && item.saleOrder.member &&  item.saleOrder.member.phone;
+              item.price = item.saleOrder && item.saleOrder.price;
+              item.breachCnt = item.saleOrder && item.saleOrder.breachCnt;
+              item.missCnt = item.saleOrder && item.saleOrder.missCnt;
+              item.breachCnt = item.saleOrder && item.saleOrder.breachCnt;
+             
             })
             this.total = total
           }
@@ -315,7 +331,7 @@
       reserveList(){
         let params = {
             begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
@@ -325,7 +341,8 @@
             let { records, total} = res.data; 
             this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
             this.viewTableData.map(item=>{
-              item.state = item.status ? '已预约':'未预约'; //type
+              item.type = typeList[item.type] // ? '已预约':'未预约'; //type
+              item.state = typeList2[item.status]
               item.memberName = item.member && item.member.name ;
               item.memberPhone = item.member && item.member.phone;
             })

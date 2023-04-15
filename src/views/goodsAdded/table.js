@@ -1,8 +1,8 @@
 //商品列表
 let addedTabHead = [
     {
-      fieldName: "价格",
-      fieldChName: "价格",
+      fieldName: "商品价格",
+      fieldChName: "商品价格",
       fieldEnName: "price",
       fieldNo: "price",
       fieldType: "input",
@@ -17,10 +17,18 @@ let addedTabHead = [
       width: 120,
     },
     {
-      fieldName: "抢购时间",
-      fieldChName: "抢购时间",
+      fieldName: "抢购开始时间",
+      fieldChName: "抢购开始时间",
       fieldEnName: "startBuyTime",
       fieldNo: "startBuyTime",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "抢购结束时间",
+      fieldChName: "抢购结束时间",
+      fieldEnName: "endBuyTime",
+      fieldNo: "endBuyTime",
       fieldType: "input",
       width: 120,
     },

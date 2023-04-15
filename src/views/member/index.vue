@@ -115,7 +115,7 @@
         listQuery: {
           page: 0,
           size: 5,
-          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()]
+          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
         },
         mainButtons:{
             list:[
@@ -201,10 +201,11 @@
             managerFrozen(data).then(res=>{
               if(res.code == '200'){
                 this.$message({
-                  message: '拒绝提现成功！',
+                  message: '修改成功！',
                   type: 'success',
                   duration: 1000
                 });
+                this.getMemberList();
               }
             })
         })
@@ -212,7 +213,7 @@
       getMemberList(){
         let params = {
             begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
@@ -222,7 +223,7 @@
             let { records, total} = res.data; 
             this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
             this.viewTableData.map(item=>{
-              item.state = item.status ? '正常':'冻结';
+              item.state = item.status == 'normal' ? '正常':'冻结';
             })
             this.total = total
            }

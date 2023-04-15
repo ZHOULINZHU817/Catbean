@@ -90,7 +90,7 @@
                     >
                     </el-switch>
                 </template>
-                 <template v-else-if="(item.fieldNo == 'createTime')"> {{scope.row[item.fieldNo] | formatDate}}</template>
+                 <template v-else-if="(item.fieldNo == 'createTime' || item.fieldNo == 'actBuyTime' || item.fieldNo == 'actSaleTime' || item.fieldNo == 'actBreachTime' || item.fieldNo == 'actFinishTime' || item.fieldNo == 'endBuyTime' || item.fieldNo == 'startBuyTime' || item.fieldNo == 'paidTime')"> {{scope.row[item.fieldNo] | formatDate}}</template>
                 <template v-else-if="scope.row.render && item.fieldNo in scope.row.render && scope.row.render[item.fieldNo].type == 'input'">
                     {{item.fieldNo | spliceField(scope.row)}}
                 </template>

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function teamList(params) {
     return request({
-        url: '/api/sys/team/list', //团队设置
+        url: '/api/sys/vip/list', //团队设置
         method: 'get',
         params: params
     })
@@ -11,7 +11,7 @@ export function teamList(params) {
 
 export function teamEdit(data) {
     return request({
-        url: '/api/sys/team', //团队设置修改
+        url: '/api/sys/vip', //团队设置修改
         method: 'put',
         data: data
     })
