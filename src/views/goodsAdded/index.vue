@@ -103,11 +103,11 @@
         viewTableData: [], //{price: 1, startBuyTime:"2023-04-07 12:23:26",type:"twelve", id:'1'}
         addedTabHead: addedTabHead, //主表表头
         total: 0,//主表数据长度
-        currentSize: 5,//主表分页size
+        currentSize: 10,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
-          size: 5
+          size: 10
         },
         mainButtons:{
             list:[

@@ -61,7 +61,7 @@
             :total="total"
             :rowEdit="true"
             :highlightCurrentRow="true"
-            :height="'400'"
+            :height="'500'"
             :buttons="mainButtons"
             @doubleClick="doubleClick"
             @getRowData="getRowData"
@@ -88,11 +88,11 @@
         viewTableData: [],
         rechargTabHead: rechargTabHead, //主表表头
         total: 0,//主表数据长度
-        currentSize: 5,//主表分页size
+        currentSize: 10,//主表分页size
         currentPage: 0,//主表分页page
         listQuery: {
           page: 0,
-          size: 5,
+          size: 10,
           createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
         },
         mainButtons:{

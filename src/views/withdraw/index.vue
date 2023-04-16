@@ -71,7 +71,7 @@
         :currentSize="currentSize"
         :currentPage="currentPage"
         :buttonCellWidth="200"
-        :height="'400'"
+        :height="'500'"
         :total="total"
         :rowEdit="true"
         :highlightCurrentRow="true"
@@ -148,11 +148,11 @@ export default {
       viewTableData: [],
       withdrawTabHead: withdrawTabHead, //主表表头
       total: 0, //主表数据长度
-      currentSize: 5, //主表分页size
+      currentSize: 10, //主表分页size
       currentPage: 0, //主表分页page
       listQuery: {
         page: 0,
-        size: 5,
+        size: 10,
         createTime: [
           new Date(new Date().toLocaleDateString()).getTime() -
             31 * 24 * 3600 * 1000,
