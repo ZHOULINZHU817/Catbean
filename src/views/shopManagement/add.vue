@@ -61,7 +61,8 @@ import MultiUpload from '@/components/Upload/multiUpload'
     data() {
       return {
         form: {
-            images:null
+            images:null,
+            status: 'online'
         },
         hasEditCreated:false,
         imagesList: [],

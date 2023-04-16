@@ -35,6 +35,7 @@ export default {
     return {
       selectProductPics: [],
       form:{
+        offline: true
       },
       rules: {}
     };
