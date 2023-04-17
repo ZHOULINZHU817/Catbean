@@ -18,10 +18,20 @@
           重置
         </el-button>
       </div>
-      <div style="margin-top: 15px">
-        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+      <div style="margin-top: 30px">
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="100px">
           <el-form-item label="输入搜索：" prop="memberPhone">
             <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="场次搜索：" prop="type">
+            <!-- <el-input v-model="listQuery.type" class="input-width" placeholder="请输入场次" @keyup.enter.native="handleSearchList()"></el-input> -->
+            <el-select v-model="listQuery.type" placeholder="全部" clearable class="input-width" style="width: 220px;">
+                <el-option v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="时间：">
             <el-date-picker
@@ -217,7 +227,11 @@
             ],
         },
         activeName:'appointment',
-
+        statusOptions:[
+          {label:"12：00场",value:'twelve'},
+          {label:"16：00场",value:'sixteen'},
+          {label:"20：00场",value:'twenty'}
+        ],
       }
     },
     created() {
@@ -303,6 +317,7 @@
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
+            type: this.listQuery.type,
             status: this.listQuery.status, //reserved, buying, resell, breach, finish
         }
         recordBuyList(params).then(res=>{
@@ -335,6 +350,7 @@
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
+            type: this.listQuery.type,
         }
         reserveList(params).then(res=>{
           if(res.code == '200'){
