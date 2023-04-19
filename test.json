@@ -134,6 +134,16 @@
                 "icon": "product",
                 "sort": 14,
                 "createTime": 1680622302000
+            },
+            {
+                "id": 15,
+                "pid": 0,
+                "name": "catBean",
+                "title": "猫豆记录",
+                "type": "menu",
+                "icon": "product",
+                "sort": 15,
+                "createTime": 1680622302000
             }
         ]
     }
