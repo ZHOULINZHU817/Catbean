@@ -68,7 +68,7 @@ export default {
   created(){
       this.timer = setInterval(() => {
           this.getWithdrawList();
-      }, 60*1000);
+      }, 5*60*1000);
   },
   methods: {
     toggleSideBar() {
