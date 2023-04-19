@@ -369,7 +369,7 @@ export const asyncRouterMap = [
         path: 'order',
         name: 'order',
         component: () => import('@/views/saleOrder/index'),
-        meta: {title: '抢购订单', icon: 'ums-admin'}
+        meta: {title: '抢购订单', icon: 'product-list'}
       },
     ]
   },
@@ -384,7 +384,7 @@ export const asyncRouterMap = [
         path: 'catBean',
         name: 'catBean',
         component: () => import('@/views/recharge/index'),
-        meta: {title: '猫豆充值', icon: 'ums-admin'}
+        meta: {title: '猫豆充值', icon: 'product-brand'}
       },
       {
         path: 'catBean/list',
@@ -406,7 +406,22 @@ export const asyncRouterMap = [
         path: 'withdrawCatBean',
         name: 'withdrawCatBean',
         component: () => import('@/views/withdraw/index'),
-        meta: {title: '猫豆提现审核', icon: 'ums-admin'}
+        meta: {title: '猫豆提现审核', icon: 'product-attr'}
+      },
+    ]
+  },
+  {
+    path:'/catBean',
+    component: Layout,
+    redirect: '/catBean/record',
+    name: 'catBean',
+    meta: {title: '猫豆记录', icon: 'ums'},
+    children: [
+      {
+        path: 'catBeanRecord',
+        name: 'catBeanRecord',
+        component: () => import('@/views/catBeanRecord/index'),
+        meta: {title: '猫豆记录', icon: 'product-cate'}
       },
     ]
   },
@@ -421,7 +436,7 @@ export const asyncRouterMap = [
         path: 'user',
         name: 'user',
         component: () => import('@/views/member/index'),
-        meta: {title: '会员列表', icon: 'ums-admin'}
+        meta: {title: '会员列表', icon: 'ums-role'}
       },
     ]
   },
@@ -496,13 +511,13 @@ export const asyncRouterMap = [
         path: 'picture',
         name: 'picture',
         component: () => import('@/views/banner/index'),
-        meta: {title: '首页轮播图管理', icon: 'ums-admin'}
+        meta: {title: '首页轮播图管理', icon: 'sms-flash'}
       },
       {
         path: 'picture/add',
         name: 'pictureAdd',
         component: () => import('@/views/banner/add'),
-        meta: {title: '首页轮播图新增', icon: 'ums-admin'},
+        meta: {title: '首页轮播图新增', icon: 'sms-flash'},
         hidden: true
       },
     ]
@@ -518,13 +533,13 @@ export const asyncRouterMap = [
         path: 'apportion',
         name: 'apportion',
         component: () => import('@/views/rewardsApportion/index'),
-        meta: {title: '团队设置', icon: 'ums-admin'}
+        meta: {title: '团队设置', icon: 'ums-role'}
       },
       {
         path: 'apportion/edit',
         name: 'apportionEdit',
         component: () => import('@/views/rewardsApportion/add'),
-        meta: {title: '团队设置编辑', icon: 'ums-admin'},
+        meta: {title: '团队设置编辑', icon: 'ums-role'},
         hidden: true
       },
     ]
@@ -540,7 +555,7 @@ export const asyncRouterMap = [
         path: 'management',
         name: 'management',
         component: () => import('@/views/version/index'),
-        meta: {title: 'APP版本号管理', icon: 'ums-admin'}
+        meta: {title: 'APP版本号管理', icon: 'ums-menu'}
       },
       {
         path: 'management/add',
@@ -556,13 +571,13 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/permission/management',
     name: 'permission',
-    meta: {title: '权限管理', icon: 'ums-role'},
+    meta: {title: '权限管理', icon: 'order-setting'},
     children: [
       {
         path: 'permissionManagement',
         name: 'permissionManagement',
         component: () => import('@/views/permission/index'),
-        meta: {title: '权限管理', icon: 'ums-role'}
+        meta: {title: '权限管理', icon: 'order-setting'}
       },
     ]
   },
@@ -577,7 +592,7 @@ export const asyncRouterMap = [
         path: 'news',
         name: 'news',
         component: () => import('@/views/notice/index'),
-        meta: {title: '公告消息', icon: 'ums-role'}
+        meta: {title: '公告消息', icon: 'ums-resource'}
       },
       {
         path: 'news/add',

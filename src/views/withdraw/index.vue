@@ -105,10 +105,12 @@
       <div style="display: flex">
         <div>{{payTitle}}:</div>
         <img
+           v-image-preview
            v-if="payObj.payType == 'wx' || payObj.payType == 'ali'"
           style="width: 200px; height: 300px;margin-left:100px;"
           :src="payObj.payUrl || 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg'"
         />
+         <!-- <img v-image-preview v-if="!!fields.picUrl" :src="fields.picUrl" referrerpolicy="no-referrer"> -->
         <div style="margin-left:30px;" v-if="payObj.payType == 'bank'">
           <div>{{payObj.member && payObj.member.bank}}</div>
           <div>{{payObj.member && payObj.member.bankNo}}</div>

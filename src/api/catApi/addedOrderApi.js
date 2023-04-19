@@ -38,5 +38,13 @@ export function reserveList(params) {
     })
 }
 
+export function catFoodList(params) {
+    return request({
+        url: '/api/sys/record/cat/food/list', //获取猫豆记录
+        method: 'get',
+        params: params
+    })
+}
+
 
 
