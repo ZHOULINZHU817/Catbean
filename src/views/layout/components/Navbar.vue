@@ -67,6 +67,7 @@ export default {
     ])
   },
   created(){
+      this.getWithdrawList();
       this.timer = setInterval(() => {
           this.getWithdrawList();
       }, 5*60*1000);

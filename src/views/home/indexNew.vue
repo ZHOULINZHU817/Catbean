@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="home-content">欢迎来到猫超商城!</div>
+    <div class="home-content">欢迎来到布偶猫舍!</div>
   </div>
 </template>
 
