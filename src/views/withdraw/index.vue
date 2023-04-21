@@ -242,7 +242,7 @@ export default {
     },
     handleSearchList(){
       this.handleResetSize();
-      this.getMemberList()
+      this.getWithdrawList()
     },
     handleResetSearch(){
       this.$refs['listQuery'].resetFields();
