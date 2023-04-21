@@ -113,7 +113,7 @@
          <!-- <img v-image-preview v-if="!!fields.picUrl" :src="fields.picUrl" referrerpolicy="no-referrer"> -->
         <div style="margin-left:30px;" v-if="payObj.payType == 'bank'">
           <div>{{payObj.member && payObj.member.bank}}</div>
-          <div>{{payObj.member && payObj.member.bankNo}}</div>
+          <div>{{payObj.member && payObj.member.cardNo}}</div>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
