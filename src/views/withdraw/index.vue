@@ -158,7 +158,7 @@ export default {
         createTime: [
           new Date(new Date().toLocaleDateString()).getTime() -
             31 * 24 * 3600 * 1000,
-          new Date(new Date().toLocaleDateString()).getTime(),
+          new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1,
         ],
       },
       mainButtons: {
