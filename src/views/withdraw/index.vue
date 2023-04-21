@@ -317,10 +317,10 @@ export default {
         if (res.code == "200") {
           let { records, total } = res.data;
           this.viewTableData = records || [];//[{payeeName:"sadad", id:'123'}]//
-          this.viewTableData[2].payType = "bank"
-          this.viewTableData[2].member.bank="掌上银行"
-          this.viewTableData[2].member.bankNo="342321424242242"
-          console.log('this.viewTableData[2].member', this.viewTableData[2].member)
+          // this.viewTableData[2].payType = "bank"
+          // this.viewTableData[2].member.bank="掌上银行"
+          // this.viewTableData[2].member.bankNo="342321424242242"
+          // console.log('this.viewTableData[2].member', this.viewTableData[2].member)
           this.total = total;
           this.viewTableData.map(item=>{
             item.memberPhone = item.member && item.member.phone;
