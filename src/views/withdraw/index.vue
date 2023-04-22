@@ -107,8 +107,9 @@
         <img
            v-image-preview
            v-if="payObj.payType == 'wx' || payObj.payType == 'ali'"
-          style="width: 200px; height: 300px;margin-left:100px;"
-          :src="payObj.payUrl || 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/20180607/5ab46a3cN616bdc41.jpg'"
+          style="width: 300px; height: 360px;margin-left:60px;"
+          alt="暂无收款码，请在移动端上传收款码"
+          :src="payObj.payUrl"
         />
          <!-- <img v-image-preview v-if="!!fields.picUrl" :src="fields.picUrl" referrerpolicy="no-referrer"> -->
         <div style="margin-left:30px;" v-if="payObj.payType == 'bank'">

@@ -424,6 +424,21 @@ export const asyncRouterMap = [
         meta: {title: '猫豆记录', icon: 'product-cate'}
       },
     ]
+  }, //Achievememt
+  {
+    path:'/achievememt',
+    component: Layout,
+    redirect: '/achievememt/list',
+    name: 'achievememt',
+    meta: {title: '团队业绩', icon: 'ums'},
+    children: [
+      {
+        path: 'achievememtList',
+        name: 'achievememtList',
+        component: () => import('@/views/achievememt/index'),
+        meta: {title: '团队业绩', icon: 'sms-subject'}
+      },
+    ]
   },
   {
     path:'/member',

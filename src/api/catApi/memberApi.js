@@ -56,7 +56,13 @@ export function managerFrozen(data) { //猫豆提现记录->审核
     })
 }
 //
-
+export function teamBuyList(params) { //获取团队收益列表
+    return request({
+        url: `/api/sys/record/total/team/buy/list`,
+        method: 'get',
+        params: params
+    })
+}
 //
 // export function noticeDelete(id, data) {
 //     return request({
