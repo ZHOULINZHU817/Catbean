@@ -17,6 +17,14 @@ let achievememtTabHead = [
       width: 120,
     },
     {
+      fieldName: "会员账号",
+      fieldChName: "会员账号",
+      fieldEnName: "memberPhone",
+      fieldNo: "memberPhone",
+      fieldType: "input",
+      width: 120,
+    },
+    {
       fieldName: "时间",
       fieldChName: "时间",
       fieldEnName: "createTime",

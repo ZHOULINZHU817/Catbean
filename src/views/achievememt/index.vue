@@ -145,6 +145,7 @@
                 item.type = item.saleOrder && typeList[item.saleOrder.type];
                 item.price = item.saleOrder && item.saleOrder.price;
                 item.createTime = item.actPaidTime;
+                item.memberPhone = item.member && item.member.phone;
             })
             this.total = total
            }
