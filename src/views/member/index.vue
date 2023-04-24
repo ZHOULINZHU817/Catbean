@@ -216,7 +216,7 @@
             end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
-            memberPhone: this.listQuery.memberPhone,
+            phone: this.listQuery.phone,
         }
         memberList(params).then(res=>{
           if(res.code == '200'){
