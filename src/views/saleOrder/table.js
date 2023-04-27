@@ -118,6 +118,22 @@ let specialOfferTabHead = [
     width: 120,
   },
   {
+    fieldName: "转卖人姓名",
+    fieldChName: "转卖人姓名",
+    fieldEnName: "buyMemberName",
+    fieldNo: "buyMemberName",
+    fieldType: "input",
+    width: 120,
+  },
+  {
+    fieldName: "转卖人联系方式",
+    fieldChName: "转卖人联系方式",
+    fieldEnName: "buyMemberPhone",
+    fieldNo: "buyMemberPhone",
+    fieldType: "input",
+    width: 120,
+  },
+  {
     fieldName: "违约次数",
     fieldChName: "违约次数",
     fieldEnName: "breachCnt",

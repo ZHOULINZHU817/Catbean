@@ -14,13 +14,14 @@
           </el-form-item>
           <el-form-item style="text-align: center;padding-top:80px;">
             <el-button size="medium" @click="payRank">充值记录</el-button>
-            <el-button type="primary" size="medium" @click="handleSaveRecharge">充值</el-button>
+            <el-button type="primary" size="medium" @click="handleSaveRecharge" :disabled="disabledBtn">充值</el-button>
           </el-form-item>
       </el-form>
     </div>
 </template>
 <script>
 import { memberPhone, recharge } from "@/api/catApi/memberApi"
+import { Throttle } from "@/utils/index"
 export default {
     name:'recharge',
     data() {
@@ -33,7 +34,8 @@ export default {
             rules: {
               phone: [{required: true, message: '请输入会员手机号', trigger: 'blur'}],
               amount: [{required: true, message: '请输入充值金额', trigger: 'blur'}],
-            }
+            },
+            disabledBtn: false,
         }
     },
     mounted() {
@@ -60,23 +62,25 @@ export default {
            })
         },
         /***充值* */
-        handleSaveRecharge() {
-          this.$refs['rechargeForm'].validate((valid) => {
-          if (valid) {
-            this.objJson.amount = this.objJson.amount*1;
-            console.log('222', this.objJson)
-            recharge(this.objJson).then(res=>{
-              if(res.code == '200'){
-                this.$message({
-                  message: '充值成功',
-                  type: 'success',
-                  duration: 1000
-                });
+        handleSaveRecharge: Throttle(function () {
+            this.$refs['rechargeForm'].validate((valid) => {
+              if (valid) {
+                this.disabledBtn = true;
+                this.objJson.amount = this.objJson.amount*1;
+                console.log('222', this.objJson)
+                recharge(this.objJson).then(res=>{
+                  if(res.code == '200'){
+                    this.$message({
+                      message: '充值成功',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.disabledBtn = false;
+                  }
+                })
               }
-            })
-          }
-        });
-        },
+            });
+        }, 1000),
         payRank(){
           this.$router.push({ 
             path:'/recharge/catBean/list'
