@@ -96,6 +96,29 @@
                     @handleOperation="handleOperation"
                     ></custom-table>
             </el-tab-pane>
+            <el-tab-pane label="已支付" name="paid">
+                <custom-table
+                    :tableData="viewTableData"
+                    :tableHead="paidTabHead"
+                    :isShowSelection="true"
+                    :sortable="true"
+                    :isShowPage="true"
+                    :currentSize="currentSize"
+                    :currentPage="currentPage"
+                    :buttonCellWidth="200"
+                    :total="total"
+                    :rowEdit="false"
+                    :height="'400'"
+                    :highlightCurrentRow="true"
+                    :buttons="mainButtons"
+                    @doubleClick="doubleClick"
+                    @getRowData="getRowData"
+                    @getSelection="getSelection"
+                    @sizeChange="sizeChange"
+                    @currentChange="currentChange"
+                    @handleOperation="handleOperation"
+                    ></custom-table>
+            </el-tab-pane>
             <el-tab-pane label="转卖中" name="resale">
                 <custom-table
                     :tableData="viewTableData"
@@ -171,7 +194,7 @@
 </template>
 <script>
   import CustomTable from "@/components/CustomTable/index.vue"
-  import { appointmentTabHead, specialOfferTabHead, resaleTabHead, breakPromiseTabHead, finishTabHead } from "./table.js";
+  import { appointmentTabHead, specialOfferTabHead, paidTabHead, resaleTabHead, breakPromiseTabHead, finishTabHead } from "./table.js";
   import { recordBuyList, reserveList } from "@/api/catApi/addedOrderApi";
   let typeList = {
     twelve:'12：00场',
@@ -202,6 +225,7 @@
         viewTableData: [],
         appointmentTabHead: appointmentTabHead, //主表表头
         specialOfferTabHead: specialOfferTabHead,
+        paidTabHead: paidTabHead,
         resaleTabHead: resaleTabHead,
         breakPromiseTabHead: breakPromiseTabHead,
         finishTabHead: finishTabHead,
@@ -293,6 +317,10 @@
             break;
           case 'specialOffer': //抢购
             this.listQuery.status='buying', //reserved, buying, resell, breach, finish
+            this.recordBuyList();
+            break;
+          case 'paid': //已支付
+            this.listQuery.status='paid', //reserved, buying, resell, breach, finish
             this.recordBuyList();
             break;
           case 'resale': // 转卖
