@@ -119,7 +119,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleNew = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirmSave">确 定</el-button>
+        <el-button v-if="isSee" type="primary" @click="handleConfirmSave">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -191,6 +191,16 @@ export default {
               }
             },
           },
+          {
+            label: "查看",
+            type: "text",
+            size: "mini",
+            method: "see",
+            class: "edit",
+            if: () => {
+              return true;
+            },
+          },
         ],
       },
       dialogVisible: false,
@@ -217,7 +227,8 @@ export default {
         },
       ],
       payTitle:'',
-      payObj: {}
+      payObj: {},
+      isSee: true,
     };
   },
   created() {
@@ -256,6 +267,13 @@ export default {
           this.payObj = params.row && params.row;
           this.payObj.payUrl =  params.row.payType == 'wx' ? this.payObj.member.wechatUrl : this.payObj.member.alipayUrl;
           this.payTitle =  params.row &&  params.row.payTypes;
+          this.dialogVisibleNew = true;
+          break;
+        case "see":
+          this.payObj = params.row && params.row;
+          this.payObj.payUrl =  params.row.payType == 'wx' ? this.payObj.member.wechatUrl : this.payObj.member.alipayUrl;
+          this.payTitle =  params.row &&  params.row.payTypes;
+          this.isSee = false;
           this.dialogVisibleNew = true;
           break;
         case "delete":
