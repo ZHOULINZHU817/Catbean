@@ -17,12 +17,28 @@ let addedTabHead = [
       width: 120,
     },
     {
+      fieldName: "会员昵称",
+      fieldChName: "会员昵称",
+      fieldEnName: "memberName",
+      fieldNo: "memberName",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "手机号",
+      fieldChName: "手机号",
+      fieldEnName: "memberPhone",
+      fieldNo: "memberPhone",
+      fieldType: "input",
+      width: 120,
+    },
+    {
       fieldName: "抢购开始时间",
       fieldChName: "抢购开始时间",
       fieldEnName: "startBuyTime",
       fieldNo: "startBuyTime",
       fieldType: "input",
-      width: 120,
+      width: 140,
     },
     {
       fieldName: "抢购结束时间",
@@ -30,7 +46,7 @@ let addedTabHead = [
       fieldEnName: "endBuyTime",
       fieldNo: "endBuyTime",
       fieldType: "input",
-      width: 120,
+      width: 140,
     },
     {
       fieldName: "抢购状态",

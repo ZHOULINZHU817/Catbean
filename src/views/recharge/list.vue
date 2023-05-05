@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-  import { rechargeList } from "@/api/catApi/memberApi"
+  import { rechargeList , rechargeDelete} from "@/api/catApi/memberApi"
   import CustomTable from "@/components/CustomTable/index.vue"
   import { rechargTabHead } from "./table.js";
   export default {
@@ -106,16 +106,16 @@
                 //     return true;
                 //     },
                 // },
-                // {
-                //     label: "删除",
-                //     type: "text",
-                //     size: "mini",
-                //     method: "delete",
-                //     class: "delete",
-                //     if: () => {
-                //     return true;
-                //     },
-                // },
+                {
+                    label: "充值回退",
+                    type: "text",
+                    size: "mini",
+                    method: "delete",
+                    class: "delete",
+                    if: () => {
+                    return true;
+                    },
+                },
             ],
         },
         activeName:'appointment'
@@ -165,19 +165,11 @@
         this.listQuery.page = this.currentPage;
       },
       handleOperation(param) {
-        // switch(param.method){
-        //   case 'edit':
-        //     this.$router.push({ 
-        //       path:'/banner/picture/add',
-        //       query:{
-        //           id: param.row.id
-        //       }
-        //     });
-        //     break;
-        //   case 'delete':
-        //     this.goodDelete(param.row)
-        //     break;
-        // }
+        switch(param.method){
+          case 'delete':
+            this.deleteRecharge(param.row)
+            break;
+        }
       },
       handleSearchList(){
         this.handleResetSize();
@@ -185,6 +177,24 @@
       },
       handleResetSearch(){
         this.$refs['listQuery'].resetFields();
+      },
+      deleteRecharge(data){
+        this.$confirm('确定要回退充值金额吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            rechargeDelete(data.id).then(res=>{
+              if(res.code == '200'){
+                this.$message({
+                  message: '充值回滚成功！',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.rechargeList();
+              }
+            })
+        })
       }
     }
   }

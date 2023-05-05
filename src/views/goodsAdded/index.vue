@@ -159,6 +159,8 @@
             this.viewTableData.map(item=>{
               item.type = typeList[item.type];
               item.state = statusList[item.status];
+              item.memberName = item.member && item.member.nickName;
+              item.memberPhone = item.member && item.member.phone;
             })
             this.total = total
            }

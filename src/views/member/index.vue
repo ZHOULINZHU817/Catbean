@@ -19,11 +19,11 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：" prop="phone">
-            <el-input v-model="listQuery.phone" class="input-width" placeholder="会员"></el-input>
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="100px">
+          <el-form-item label="会员搜索：" prop="phone">
+            <el-input v-model="listQuery.phone" class="input-width" placeholder="会员手机号"></el-input>
           </el-form-item>
-          <el-form-item label="时间：">
+          <el-form-item label="时间：" v-if="isShowTime">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
@@ -48,27 +48,54 @@
       </el-button>
     </el-card> -->
     <div class="table-container">
-        <custom-table
-            :tableData="viewTableData"
-            :tableHead="memberTabHead"
-            :isShowSelection="true"
-            :sortable="true"
-            :isShowPage="true"
-            :currentSize="currentSize"
-            :currentPage="currentPage"
-            :buttonCellWidth="200"
-            :height="'500'"
-            :total="total"
-            :rowEdit="true"
-            :highlightCurrentRow="true"
-            :buttons="mainButtons"
-            @doubleClick="doubleClick"
-            @getRowData="getRowData"
-            @getSelection="getSelection"
-            @sizeChange="sizeChange"
-            @currentChange="currentChange"
-            @handleOperation="handleOperation"
+        <el-tabs type="border-card" v-model="activeName"  @tab-click="handleTabClick">
+          <el-tab-pane label="会员" name="member">
+            <custom-table
+                :tableData="viewTableData"
+                :tableHead="memberTabHead"
+                :isShowSelection="true"
+                :sortable="true"
+                :isShowPage="true"
+                :currentSize="currentSize"
+                :currentPage="currentPage"
+                :buttonCellWidth="200"
+                :height="'500'"
+                :total="total"
+                :rowEdit="true"
+                :highlightCurrentRow="true"
+                :buttons="mainButtons"
+                @doubleClick="doubleClick"
+                @getRowData="getRowData"
+                @getSelection="getSelection"
+                @sizeChange="sizeChange"
+                @currentChange="currentChange"
+                @handleOperation="handleOperation"
             ></custom-table>
+          </el-tab-pane>
+          <el-tab-pane label="下级会员" name="juniorMember">
+            <custom-table
+                :tableData="viewTableData"
+                :tableHead="memberTabHead"
+                :isShowSelection="true"
+                :sortable="true"
+                :isShowPage="true"
+                :currentSize="currentSize"
+                :currentPage="currentPage"
+                :buttonCellWidth="200"
+                :height="'500'"
+                :total="total"
+                :rowEdit="true"
+                :highlightCurrentRow="true"
+                :buttons="mainButtons"
+                @doubleClick="doubleClick"
+                @getRowData="getRowData"
+                @getSelection="getSelection"
+                @sizeChange="sizeChange"
+                @currentChange="currentChange"
+                @handleOperation="handleOperation"
+            ></custom-table>
+          </el-tab-pane>
+        </el-tabs>
     </div>
     <!-- <el-dialog
       title="订单编辑"
@@ -97,7 +124,7 @@
   import CustomTable from "@/components/CustomTable/index.vue"
   import CustomForm from "@/components/CustomForm/indexNew.vue"
   import { memberTabHead } from "./table.js";
-  import { memberList, managerFrozen } from "@/api/catApi/memberApi"
+  import { memberList, managerFrozen, memberChildList } from "@/api/catApi/memberApi"
   export default {
     name: "orderList",
     components:{
@@ -148,6 +175,8 @@
                 },
             ],
         },
+        activeName: 'member',
+        isShowTime: true,
       }
     },
     created() {
@@ -166,12 +195,20 @@
       sizeChange(val) {
         this.currentSize = val
         this.listQuery.size = this.currentSize
-        this.getMemberList()
+        if(this.activeName == 'member'){
+          this.getMemberList();
+        }else{
+         if(this.listQuery.phone) this.getJuniorMember();
+        }
       },
       currentChange(val) {
         this.currentPage = val
         this.listQuery.page = this.currentPage-1
-        this.getMemberList()
+        if(this.activeName == 'member'){
+          this.getMemberList();
+        }else{
+          if(this.listQuery.phone) this.getJuniorMember();
+        }
       },
       handleResetSize() {
         this.currentPage = 0
@@ -205,7 +242,11 @@
                   type: 'success',
                   duration: 1000
                 });
-                this.getMemberList();
+                if(this.activeName == 'member'){
+                  this.getMemberList();
+                }else{
+                  this.getJuniorMember();
+                }
               }
             })
         })
@@ -229,13 +270,50 @@
            }
         })
       },
+      getJuniorMember(){
+        let params = {
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            phone: this.listQuery.phone,
+        }
+        memberChildList(params).then(res=>{
+          if(res.code == '200'){
+            let { records, total} = res.data; 
+            this.viewTableData = records || []; //[{status: false, phone:'123'},{status: true, phone:'456'}]
+            this.viewTableData.map(item=>{
+              item.state = item.status == 'normal' ? '正常':'冻结';
+            })
+            this.total = total
+           }
+        })
+      },
       handleSearchList(){
         this.handleResetSize();
-        this.getMemberList()
+        if(this.activeName == 'member'){
+          this.getMemberList();
+        }else{
+          if(this.listQuery.phone) this.getJuniorMember()
+        }
       },
       handleResetSearch(){
         this.$refs['listQuery'].resetFields();
-      }
+      },
+      handleTabClick(tab) {
+        this.viewTableData = [];
+        this.total = 0;
+        this.handleResetSize();
+        this.handleResetSearch();
+        switch(tab.name){
+          case 'member': //会员
+            this.isShowTime = true;
+            this.getMemberList();
+            break;
+          case 'juniorMember': //下级会员
+            this.isShowTime = false;
+            if(this.listQuery.phone) this.getJuniorMember();
+            break;
+        }
+      },
     }
   }
 </script>

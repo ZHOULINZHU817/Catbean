@@ -275,6 +275,8 @@
               item.productId = item.product && item.product.id;
               item.name = item.product && item.product.name;
               item.state = stateList[item.state];
+              item.memberName = item.member && item.member.nickName;
+              item.memberPhone = item.member && item.member.phone;
             })
             this.total = total
            }

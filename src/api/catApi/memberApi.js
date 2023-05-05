@@ -9,6 +9,15 @@ export function memberList(params) { //会员列表
     })
 }
 
+export function memberChildList(params) { //下级会员列表
+    return request({
+        // url: '/admin/list',
+        url: `/api/sys/manager/member/child/list`,
+        method: 'get',
+        params: params
+    })
+}
+
 export function memberPhone(params) { //根据手机号查询会员
     return request({
         url: `/api/sys/manager/member/phone`,
@@ -61,6 +70,14 @@ export function teamBuyList(params) { //获取团队收益列表
         url: `/api/sys/record/total/team/buy/list`,
         method: 'get',
         params: params
+    })
+}
+//回滚充值
+export function rechargeDelete(id, data) {
+    return request({
+        url: '/api/sys/asset/revert/recharge/' + id,
+        method: 'delete',
+        data: data
     })
 }
 //

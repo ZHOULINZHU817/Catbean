@@ -39,6 +39,22 @@ let orderTabHead = [
       fieldNo: "totalPrice",
       fieldType: "input",
       width: 120,
+    },
+    {
+      fieldName: "会员昵称",
+      fieldChName: "会员昵称",
+      fieldEnName: "memberName",
+      fieldNo: "memberName",
+      fieldType: "input",
+      width: 120,
+    }, 
+    {
+      fieldName: "手机号",
+      fieldChName: "手机号",
+      fieldEnName: "memberPhone",
+      fieldNo: "memberPhone",
+      fieldType: "input",
+      width: 120,
     }, 
     {
       fieldName: "发货地址",
