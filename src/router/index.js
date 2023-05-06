@@ -619,6 +619,21 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path:'/payCode',
+    component: Layout,
+    redirect: '/pay/code',
+    name: 'payCode',
+    meta: {title: '收款码设置', icon: 'ums-role'},
+    children: [
+      {
+        path: 'code',
+        name: 'code',
+        component: () => import('@/views/payCode/index'),
+        meta: {title: '收款码设置', icon: 'ums-role'}
+      },
+    ]
+  },
+  {
     path:'/callCenter',
     component: Layout,
     redirect: '/callCenter/service',

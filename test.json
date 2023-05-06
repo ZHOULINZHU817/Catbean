@@ -154,6 +154,16 @@
                 "icon": "product",
                 "sort": 16,
                 "createTime": 1680622302000
+            },
+            {
+                "id": 17,
+                "pid": 0,
+                "name": "payCode",
+                "title": "收款码设置",
+                "type": "menu",
+                "icon": "product",
+                "sort": 17,
+                "createTime": 1680622302000
             }
         ]
     }
