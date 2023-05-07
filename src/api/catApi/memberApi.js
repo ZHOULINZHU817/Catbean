@@ -80,6 +80,14 @@ export function rechargeDelete(id, data) {
         data: data
     })
 }
+//充值审核
+export function rechargeAudit(data) { //猫豆充值审核
+    return request({
+        url: `/api/sys/asset/recharge/audit`,
+        method: 'put',
+        data: data
+    })
+}
 //
 // export function noticeDelete(id, data) {
 //     return request({

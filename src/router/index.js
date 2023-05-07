@@ -418,8 +418,8 @@ export const asyncRouterMap = [
     meta: {title: '猫豆记录', icon: 'ums'},
     children: [
       {
-        path: 'catBeanRecord',
-        name: 'catBeanRecord',
+        path: 'record',
+        name: 'record',
         component: () => import('@/views/catBeanRecord/index'),
         meta: {title: '猫豆记录', icon: 'product-cate'}
       },
@@ -433,8 +433,8 @@ export const asyncRouterMap = [
     meta: {title: '团队业绩', icon: 'ums'},
     children: [
       {
-        path: 'achievememtList',
-        name: 'achievememtList',
+        path: 'list',
+        name: 'list',
         component: () => import('@/views/achievememt/index'),
         meta: {title: '团队业绩', icon: 'sms-subject'}
       },
@@ -584,13 +584,13 @@ export const asyncRouterMap = [
   {
     path:'/permission',
     component: Layout,
-    redirect: '/permission/management',
+    redirect: '/permission/managements',
     name: 'permission',
     meta: {title: '权限管理', icon: 'order-setting'},
     children: [
       {
-        path: 'permissionManagement',
-        name: 'permissionManagement',
+        path: 'managements',
+        name: 'managements',
         component: () => import('@/views/permission/index'),
         meta: {title: '权限管理', icon: 'order-setting'}
       },
@@ -621,7 +621,7 @@ export const asyncRouterMap = [
   {
     path:'/payCode',
     component: Layout,
-    redirect: '/pay/code',
+    redirect: '/payCode/code',
     name: 'payCode',
     meta: {title: '收款码设置', icon: 'ums-role'},
     children: [

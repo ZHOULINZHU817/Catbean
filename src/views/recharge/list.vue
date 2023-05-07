@@ -71,16 +71,41 @@
             @handleOperation="handleOperation"
             ></custom-table>
     </div>
+    <el-dialog title="充值审核" :visible.sync="dialogVisible" width="50%">
+      <custom-form
+        ref="subForm"
+        :label-width="'150px'"
+        :rules="rules"
+        :form="formInfo"
+        :fields="fields"
+        style="margin-bottom: 20px; padding-right: 30px"
+        :labelWidth="'150px'"
+        :formMaxWidth="'dept'"
+        class="shopCar"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm(false)">同 意</el-button>
+        <el-button type="primary" @click="handleConfirm(true)">驳 回</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-  import { rechargeList , rechargeDelete} from "@/api/catApi/memberApi"
+  import { rechargeList , rechargeDelete, rechargeAudit } from "@/api/catApi/memberApi"
   import CustomTable from "@/components/CustomTable/index.vue"
+  import CustomForm from "@/components/CustomForm/indexNew.vue";
   import { rechargTabHead } from "./table.js";
+  let stateList = {
+    audit:"待审核",
+    finish:"已审核",
+    reject:"已拒绝",
+  }
   export default {
     name: "rechargeList",
     components:{
-        CustomTable
+        CustomTable,
+        CustomForm
     },
     data() {
       return {
@@ -97,17 +122,21 @@
         },
         mainButtons:{
             list:[
-                // {
-                //     label: "编辑",
-                //     type: "text",
-                //     size: "mini",
-                //     method: "edit",
-                //     if: () => {
-                //     return true;
-                //     },
-                // },
                 {
-                    label: "充值回退",
+                    label: "审核",
+                    type: "text",
+                    size: "mini",
+                    method: "edit",
+                    if: (params) => {
+                      if(params.state == 'audit'){
+                        return true;
+                      }else{
+                        return false;
+                      }
+                    },
+                },
+                {
+                    label: "撤销充值",
                     type: "text",
                     size: "mini",
                     method: "delete",
@@ -118,7 +147,29 @@
                 },
             ],
         },
-        activeName:'appointment'
+        //
+        dialogVisible: false,
+        rules: {
+          reason: [
+            {
+              required: false,
+              message: "请输入驳回原因",
+              trigger: "blur",
+            },
+          ],
+        },
+        formInfo: {
+          reason: "",
+        },
+        fields: [
+          {
+            keyName: "reason",
+            label: "原因",
+            type: "textarea",
+            maxlength: 20,
+            formMaxWidth: 24,
+          },
+        ],
       }
     },
     created() {
@@ -137,6 +188,9 @@
            if(res.code == '200'){
             let { records, total} = res.data;
             this.viewTableData = records || [];
+             this.viewTableData.map(item=>{
+              item.states = stateList[item.state]
+             })
             this.total = total
            }
         })
@@ -169,6 +223,10 @@
           case 'delete':
             this.deleteRecharge(param.row)
             break;
+          case 'edit':
+            this.row = param.row;
+            this.auditData()
+            break;
         }
       },
       handleSearchList(){
@@ -194,6 +252,36 @@
                 this.rechargeList();
               }
             })
+        })
+      },
+      auditData(){
+        this.dialogVisible = true;
+      },
+      handleConfirm(val){
+        if(val){
+          this.rules.reason[0].required = true;
+        }else{
+          this.rules.reason[0].required = false;
+        }
+        this.$refs["subForm"].validate("", (boolean) => {
+          if (boolean) {
+            let params = {
+              reject: val,
+              reason: this.formInfo.reason,
+              rechargeRecordId: this.row.id
+            }
+            rechargeAudit(params).then(res=>{
+                if(res.code == '200'){
+                  this.$message({
+                    message: '审核成功！',
+                    type: 'success',
+                    duration: 1000
+                  });
+                  this.dialogVisible = false;
+                  this.rechargeList();
+                }
+            })
+          }
         })
       }
     }

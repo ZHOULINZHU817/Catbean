@@ -23,6 +23,22 @@ let rechargTabHead = [
       fieldNo: "amount",
       fieldType: "input",
       width: 120,
+    },
+    {
+      fieldName: "状态",
+      fieldChName: "状态",
+      fieldEnName: "states",
+      fieldNo: "states",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "原因",
+      fieldChName: "原因",
+      fieldEnName: "reason",
+      fieldNo: "reason",
+      fieldType: "input",
+      width: 120,
     }
   ]
 
