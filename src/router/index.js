@@ -477,7 +477,21 @@ export const asyncRouterMap = [
       },
     ]
   },
-  
+  {
+      path:'/payCode',
+      component: Layout,
+      redirect: '/payCode/code',
+      name: 'payCode',
+      meta: {title: '收款码设置', icon: 'ums-role'},
+      children: [
+        {
+          path: 'code',
+          name: 'code',
+          component: () => import('@/views/payCode/index'),
+          meta: {title: '收款码设置', icon: 'ums-role'}
+        },
+      ]
+  },
   {
     path:'/shopManagement',
     component: Layout,
@@ -615,21 +629,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/notice/add'),
         meta: {title: '新增消息', icon: 'product-add'},
         hidden: true
-      },
-    ]
-  },
-  {
-    path:'/payCode',
-    component: Layout,
-    redirect: '/payCode/code',
-    name: 'payCode',
-    meta: {title: '收款码设置', icon: 'ums-role'},
-    children: [
-      {
-        path: 'code',
-        name: 'code',
-        component: () => import('@/views/payCode/index'),
-        meta: {title: '收款码设置', icon: 'ums-role'}
       },
     ]
   },
