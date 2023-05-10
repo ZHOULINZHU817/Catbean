@@ -91,8 +91,8 @@ let memberTabHead = [
     {
       fieldName: "奖励金",
       fieldChName: "奖励金",
-      fieldEnName: "buyReword",
-      fieldNo: "buyReword",
+      fieldEnName: "buyReward",
+      fieldNo: "buyReward",
       fieldType: "input",
       width: 120,
     },
