@@ -20,6 +20,9 @@
       </div>
       <div style="margin-top: 15px">
         <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px" @submit.native.prevent>
+          <el-form-item label="会员手机号：" prop="memberPhone">
+            <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
+          </el-form-item>
           <el-form-item label="场次搜索：" prop="type">
             <!-- <el-input v-model="listQuery.type" class="input-width" placeholder="请输入场次" @keyup.enter.native="handleSearchList()"></el-input> -->
             <el-select v-model="listQuery.type" placeholder="全部" clearable class="input-width" style="width: 220px;">

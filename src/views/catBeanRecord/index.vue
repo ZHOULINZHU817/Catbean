@@ -18,10 +18,20 @@
           重置
         </el-button>
       </div>
-      <div style="margin-top: 15px">
-        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="140px">
+      <div style="margin-top: 30px">
+        <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="100px">
           <el-form-item label="输入搜索：" prop="memberPhone">
             <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="状态：" prop="type">
+            <!-- <el-input v-model="listQuery.type" class="input-width" placeholder="请输入场次" @keyup.enter.native="handleSearchList()"></el-input> -->
+            <el-select v-model="listQuery.type" placeholder="请选择" clearable class="input-width" style="width: 220px;">
+                <el-option v-for="item in statusOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="时间：">
             <el-date-picker
@@ -114,6 +124,21 @@
             list:[
             ],
         },
+        statusOptions:[
+            {label:"转出好友",value:'out'},
+            {label:"平台购入",value:'recharge'},
+            {label:"违约",value:'breach'},
+            {label:"好友转赠",value:'into'},
+            {label:"猫豆提现",value:'withdraw'},
+            {label:"支付订单",value:'payOrder'},
+            {label:"猫超订单",value:'mallOrder'},
+            {label:"预约冻结",value:'reserveFrozen'},
+            {label:"预约返还",value:'reserveRefund'},
+            {label:"奖励金兑换",value:'exchangeBuy'},
+            {label:"分润兑换",value:'exchangeTeam'},
+            {label:"分享值兑换",value:'exchangeChild'},
+            {label:"订单售出",value:'saleOrder'},
+        ],
       }
     },
     created() {
@@ -127,6 +152,7 @@
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
+            type: this.listQuery.type,
         }
         catFoodList(params).then((res)=>{
            if(res.code == '200'){
