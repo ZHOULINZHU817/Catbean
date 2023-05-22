@@ -17,6 +17,14 @@ let memberTabHead = [
       width: 120,
     },
     {
+      fieldName: "上级会员",
+      fieldChName: "上级会员",
+      fieldEnName: "parentPhone",
+      fieldNo: "parentPhone",
+      fieldType: "input",
+      width: 120,
+    },
+    {
       fieldName: "联系方式",
       fieldChName: "联系方式",
       fieldEnName: "phone",
