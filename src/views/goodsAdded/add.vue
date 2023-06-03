@@ -4,6 +4,9 @@
       <el-form-item label="价格：" prop="price" style="width: 340px;">
          <el-input type="number" v-model="form.price"></el-input>
       </el-form-item>
+       <el-form-item label="数量：" prop="cnt" style="width: 340px;">
+         <el-input type="number" max="10" @input="numberChange(arguments[0],10)" v-model="form.cnt"></el-input>
+      </el-form-item>
       <el-form-item label="场次：" prop="type">
          <el-select v-model="form.type" placeholder="全部" clearable class="input-width" style="width: 220px;">
             <el-option v-for="item in statusOptions"
@@ -44,7 +47,8 @@ import {
     data() {
       return {
         form: {
-           startBuyTime:''
+           startBuyTime:'',
+           cnt: 1
         },
         rules: {
           type: [{required: true, message: '请选择场次', trigger: 'blur'}],
@@ -74,6 +78,22 @@ import {
     methods: {
       handleBrandChange(){
 
+      },
+      numberChange (val,maxNum) {
+          //转换数字类型
+          this.form.cnt = Number(val)
+          //重新渲染
+          this.$nextTick(()=>{
+              //比较输入的值和最大值，返回小的
+              let num = Math.min(Number(val),maxNum)
+              //输入负值的情况下， = 0（可根据实际需求更该）
+              if(num<1) {
+                  this.form.cnt = 1
+              }else {
+                  //反之
+                  this.form.cnt = num
+              }
+          })
       },
       //保存商品
       handleSave(formName){
