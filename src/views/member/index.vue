@@ -21,7 +21,10 @@
       <div style="margin-top: 15px">
         <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="100px">
           <el-form-item label="会员搜索：" prop="phone">
-            <el-input v-model="listQuery.phone" class="input-width" placeholder="会员手机号"></el-input>
+            <el-input v-model="listQuery.phone" class="input-width" placeholder="请输入会员手机号"></el-input>
+          </el-form-item>
+           <el-form-item label="会员号：" prop="no">
+            <el-input v-model="listQuery.no" class="input-width" placeholder="请输入会员号"></el-input>
           </el-form-item>
           <el-form-item label="时间：" v-if="isShowTime">
             <el-date-picker
@@ -258,6 +261,7 @@
             page: this.listQuery.page,
             size: this.listQuery.size,
             phone: this.listQuery.phone,
+            no: this.listQuery.no,
         }
         memberList(params).then(res=>{
           if(res.code == '200'){
@@ -319,7 +323,7 @@
 </script>
 <style scoped>
   .input-width {
-    width: 280px;
+    width: 220px;
   }
 </style>
 

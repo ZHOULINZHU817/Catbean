@@ -47,4 +47,13 @@ export function catFoodList(params) {
 }
 
 
+export function transferList(params) {
+    return request({
+        url: '/api/sys/record/transfer/list', //获取转赠记录
+        method: 'get',
+        params: params
+    })
+}
+
+
 

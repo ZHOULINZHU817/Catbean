@@ -20,10 +20,13 @@
       </div>
       <div style="margin-top: 30px">
         <el-form ref="listQuery" :inline="true" :model="listQuery" size="small" label-width="100px">
-          <el-form-item label="输入搜索：" prop="memberPhone">
+          <el-form-item v-if="isShowTime" label="输入搜索：" prop="memberPhone">
             <el-input v-model="listQuery.memberPhone" class="input-width" placeholder="请输入会员手机号"></el-input>
           </el-form-item>
-          <el-form-item label="状态：" prop="type">
+          <el-form-item v-if="!isShowTime" label="输入搜索：" prop="memberAccount">
+            <el-input v-model="listQuery.memberAccount" class="input-width" placeholder="请输入付款人手机号"></el-input>
+          </el-form-item>
+          <el-form-item v-if="isShowTime" label="状态：" prop="type">
             <!-- <el-input v-model="listQuery.type" class="input-width" placeholder="请输入场次" @keyup.enter.native="handleSearchList()"></el-input> -->
             <el-select v-model="listQuery.type" placeholder="请选择" clearable class="input-width" style="width: 220px;">
                 <el-option v-for="item in statusOptions"
@@ -57,7 +60,7 @@
         class="btn-add">添加
       </el-button>
     </el-card> -->
-    <div class="table-container">
+    <!-- <div class="table-container">
         <custom-table
             :tableData="viewTableData"
             :tableHead="catFoodTabHead"
@@ -80,13 +83,65 @@
             @currentChange="currentChange"
             @handleOperation="handleOperation"
             ></custom-table>
+    </div> -->
+    <div class="table-container">
+      <el-tabs type="border-card" v-model="activeName"  @tab-click="handleTabClick">
+        <el-tab-pane label="猫豆记录" name="catBeanRecord">
+           <custom-table
+            :tableData="viewTableData"
+            :tableHead="catFoodTabHead"
+            :isShowSelection="false"
+            :sortable="true"
+            :isShowSeq="true"
+            :isShowPage="true"
+            :currentSize="currentSize"
+            :currentPage="currentPage"
+            :buttonCellWidth="200"
+            :total="total"
+            :rowEdit="true"
+            :highlightCurrentRow="true"
+            :height="'500'"
+            :buttons="mainButtons"
+            @doubleClick="doubleClick"
+            @getRowData="getRowData"
+            @getSelection="getSelection"
+            @sizeChange="sizeChange"
+            @currentChange="currentChange"
+            @handleOperation="handleOperation"
+            ></custom-table>
+        </el-tab-pane>
+        <el-tab-pane label="转赠记录" name="donation">
+           <custom-table
+            :tableData="viewTableData"
+            :tableHead="donationTabHead"
+            :isShowSelection="false"
+            :sortable="true"
+            :isShowSeq="true"
+            :isShowPage="true"
+            :currentSize="currentSize"
+            :currentPage="currentPage"
+            :buttonCellWidth="200"
+            :total="total"
+            :rowEdit="true"
+            :highlightCurrentRow="true"
+            :height="'500'"
+            :buttons="mainButtons"
+            @doubleClick="doubleClick"
+            @getRowData="getRowData"
+            @getSelection="getSelection"
+            @sizeChange="sizeChange"
+            @currentChange="currentChange"
+            @handleOperation="handleOperation"
+            ></custom-table>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
 <script>
-  import { catFoodList } from "@/api/catApi/addedOrderApi"
+  import { catFoodList, transferList } from "@/api/catApi/addedOrderApi"
   import CustomTable from "@/components/CustomTable/index.vue"
-  import { catFoodTabHead } from "./table.js";
+  import { catFoodTabHead, donationTabHead } from "./table.js";
   let catBean = {
     out:'转出好友', //-
     recharge: '平台购入',//+
@@ -112,6 +167,7 @@
         // 主表默认配置
         viewTableData: [],
         catFoodTabHead: catFoodTabHead, //主表表头
+        donationTabHead: donationTabHead,
         total: 0,//主表数据长度
         currentSize: 10,//主表分页size
         currentPage: 0,//主表分页page
@@ -139,6 +195,8 @@
             {label:"分享值兑换",value:'exchangeChild'},
             {label:"订单售出",value:'saleOrder'},
         ],
+        activeName: 'catBeanRecord',
+        isShowTime: true,
       }
     },
     created() {
@@ -162,6 +220,26 @@
                 item.types = catBean[item.type];
                 item.amount = this.getItemType(item.type) + item.amount;
                 item.memberPhone = item.member && item.member.phone;
+            })
+            this.total = total
+           }
+        })
+      },
+      getTransferList() {
+        let params = {
+            begin: this.listQuery.createTime[0],
+            end: this.listQuery.createTime[1],
+            page: this.listQuery.page,
+            size: this.listQuery.size,
+            memberAccount: this.listQuery.memberAccount
+        }
+        transferList(params).then((res)=>{
+           if(res.code == '200'){
+            let { records, total} = res.data;
+            this.viewTableData = records || [];
+            this.viewTableData.map(item=>{
+                item.intoPhone = item.payee && item.payee.phone;
+                item.outPhone = item.payer && item.payer.phone;
             })
             this.total = total
            }
@@ -206,12 +284,20 @@
       sizeChange(val) {
         this.currentSize = val
         this.listQuery.size = this.currentSize
-        this.getCatFoodList()
+        if(this.activeName == 'catBeanRecord'){
+          this.getCatFoodList();
+        }else{
+          this.getTransferList()
+        }
       },
       currentChange(val) {
         this.currentPage = val
         this.listQuery.page = this.currentPage-1
-        this.getCatFoodList()
+        if(this.activeName == 'catBeanRecord'){
+          this.getCatFoodList();
+        }else{
+          this.getTransferList()
+        }
       },
       handleResetSize() {
         this.currentPage = 0
@@ -234,11 +320,31 @@
       },
       handleSearchList(){
         this.handleResetSize();
-        this.getCatFoodList()
+        if(this.activeName == 'catBeanRecord'){
+          this.getCatFoodList();
+        }else{
+          this.getTransferList()
+        }
       },
       handleResetSearch(){
         this.$refs['listQuery'].resetFields();
-      }
+      },
+      handleTabClick(tab) {
+        this.viewTableData = [];
+        this.total = 0;
+        this.handleResetSize();
+        this.handleResetSearch();
+        switch(tab.name){
+          case 'catBeanRecord': //猫豆
+            this.isShowTime = true;
+            this.getCatFoodList();
+            break;
+          case 'donation': //转赠
+            this.isShowTime = false;
+            this.getTransferList();
+            break;
+        }
+      },
     }
   }
 </script>

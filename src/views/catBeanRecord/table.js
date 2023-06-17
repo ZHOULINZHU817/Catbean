@@ -34,4 +34,39 @@ let catFoodTabHead = [
     }
   ]
 
-export { catFoodTabHead };
+  let donationTabHead=[
+    {
+      fieldName: "转入人手机号",
+      fieldChName: "转入人手机号",
+      fieldEnName: "intoPhone",
+      fieldNo: "intoPhone",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "转出人手机号",
+      fieldChName: "转出人手机号",
+      fieldEnName: "outPhone",
+      fieldNo: "outPhone",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "时间",
+      fieldChName: "时间",
+      fieldEnName: "createTime",
+      fieldNo: "createTime",
+      fieldType: "input",
+      width: 120,
+    },
+    {
+      fieldName: "金额",
+      fieldChName: "金额",
+      fieldEnName: "amount",
+      fieldNo: "amount",
+      fieldType: "input",
+      width: 120,
+    }
+  ]
+
+export { catFoodTabHead, donationTabHead };
