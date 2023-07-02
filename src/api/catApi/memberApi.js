@@ -88,6 +88,14 @@ export function rechargeAudit(data) { //猫豆充值审核
         data: data
     })
 }
+//猫豆扣除
+export function catReduce(data) { //猫豆扣除
+    return request({
+        url: `/api/sys/manager/reduce`,
+        method: 'put',
+        data: data
+    })
+}
 //
 // export function noticeDelete(id, data) {
 //     return request({

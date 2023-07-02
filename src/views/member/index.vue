@@ -26,7 +26,7 @@
            <el-form-item label="会员号：" prop="no">
             <el-input v-model="listQuery.no" class="input-width" placeholder="请输入会员号"></el-input>
           </el-form-item>
-          <el-form-item label="时间：" v-if="isShowTime">
+          <!-- <el-form-item label="时间：" v-if="isShowTime">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
@@ -37,7 +37,7 @@
               end-placeholder="结束日期"
               placeholder="请选择时间">
             </el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
     </el-card>
@@ -100,8 +100,8 @@
           </el-tab-pane>
         </el-tabs>
     </div>
-    <!-- <el-dialog
-      title="订单编辑"
+    <el-dialog
+      title="猫豆扣除"
       :visible.sync="dialogVisible" 
       width="50%">
       <custom-form
@@ -120,14 +120,14 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleConfirm">确 定</el-button>
       </span>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 <script>
   import CustomTable from "@/components/CustomTable/index.vue"
   import CustomForm from "@/components/CustomForm/indexNew.vue"
   import { memberTabHead } from "./table.js";
-  import { memberList, managerFrozen, memberChildList } from "@/api/catApi/memberApi"
+  import { memberList, managerFrozen, memberChildList, catReduce } from "@/api/catApi/memberApi"
   export default {
     name: "orderList",
     components:{
@@ -145,7 +145,7 @@
         listQuery: {
           page: 0,
           size: 10,
-          createTime:[new Date(new Date().toLocaleDateString()).getTime() - 31 * 24 * 3600 * 1000, new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1]
+          // createTime:[]
         },
         mainButtons:{
             list:[
@@ -176,10 +176,39 @@
                         }
                     },
                 },
+                {
+                    label: "猫豆扣除",
+                    type: "text",
+                    size: "mini",
+                    method: "catDelete",
+                    class: "edit",
+                    if: (param) => {
+                       return true;
+                    },
+                },
             ],
         },
         activeName: 'member',
         isShowTime: true,
+        dialogVisible: false,
+        formInfo: {},
+        rules: {
+            amount: [{
+                required: true,
+                message: '请输入扣除金额',
+                trigger: 'blur'
+            }]
+        },
+        fields: [
+          {
+              keyName: 'amount',
+              label: '扣除金额',
+              type: 'number',
+              maxlength: 20,
+              formMaxWidth: 24,
+          },
+        ],
+        rowItem: {}
       }
     },
     created() {
@@ -224,6 +253,10 @@
             break;
             case 'delete': //解封
               this.getData(params.row, 2)   
+            break; 
+            case 'catDelete': //扣除
+              this.dialogVisible = true;
+              this.rowItem = params.row;
             break;
         }
       },
@@ -256,8 +289,8 @@
       },
       getMemberList(){
         let params = {
-            begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[1],
+            // begin: this.listQuery.createTime[0],
+            // end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             phone: this.listQuery.phone,
@@ -318,6 +351,28 @@
             break;
         }
       },
+      /**猫豆扣除** */
+      handleConfirm(){
+        this.$refs["subForm"].validate("", (boolean) => {
+          if (boolean) {
+            let params = {
+              ...this.formInfo,
+              phone: this.rowItem.phone
+            }
+            catReduce(params).then(res=>{
+              if(res.code == '200'){
+                this.$message({
+                  message: '猫豆扣除成功',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.dialogVisible = false;
+                this.getMemberList();
+              }
+            })
+          }
+        })
+      }
     }
   }
 </script>

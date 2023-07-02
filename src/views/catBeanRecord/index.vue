@@ -36,7 +36,7 @@
                 </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="时间：">
+          <el-form-item v-show="!isShowTime" label="时间：">
             <el-date-picker
               class="input-width"
               v-model="listQuery.createTime"
@@ -205,8 +205,8 @@
     methods: {
       getCatFoodList(){
         let params = {
-            begin: this.listQuery.createTime[0],
-            end: this.listQuery.createTime[1],
+            // begin: this.listQuery.createTime[0],
+            // end: this.listQuery.createTime[1],
             page: this.listQuery.page,
             size: this.listQuery.size,
             memberPhone: this.listQuery.memberPhone,
@@ -334,6 +334,7 @@
         this.total = 0;
         this.handleResetSize();
         this.handleResetSearch();
+        this.activeName = tab.name;
         switch(tab.name){
           case 'catBeanRecord': //猫豆
             this.isShowTime = true;
